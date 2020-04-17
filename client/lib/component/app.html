@@ -1,0 +1,44 @@
+<header class='material-header'>
+  <div class='material-header-row'>
+    <material-button icon class='material-drawer-button' (trigger)='drawer.toggle()'>
+      <material-icon icon='menu'></material-icon>
+    </material-button>
+    <span class='material-header-title'>Darkwing</span>
+    <div class='material-spacer'></div>
+    <nav class='material-navigation'>
+      <a>USER</a>
+    </nav>
+  </div>
+</header>
+
+<material-drawer persistent #drawer='drawer'>
+  <material-list>
+    <div group>
+      <div label>Menu</div>
+      <material-list-item [routerLink]='Routes.none.toUrl()'>
+        <material-icon icon='verified_user'></material-icon>ROE
+      </material-list-item>
+      <material-list-item [routerLink]='Routes.none.toUrl()'>
+        <material-icon icon='router'></material-icon>Networks
+      </material-list-item>
+      <material-list-item [routerLink]='Routes.hostList.toUrl()'>
+        <material-icon icon='desktop_mac'></material-icon>Hosts
+      </material-list-item>
+      <material-list-item [routerLink]='Routes.none.toUrl()'>
+        <material-icon icon='folder_open'></material-icon>Files
+      </material-list-item>
+    </div>
+    <div group>
+      <div label>Tasks</div>
+      <material-list-item>
+        <material-icon icon='view_list'></material-icon>Tasks
+      </material-list-item>
+    </div>
+  </material-list>
+</material-drawer>
+
+<material-content>
+  <div>
+    <router-outlet [routes]='Routes.all'></router-outlet>
+  </div>
+</material-content>

@@ -1,0 +1,16 @@
+*.code-workspace
+*.egg-info
+*.gz
+*.log
+*.pk
+.mypy_cache
+.pytest_cache
+.vscode
+__pycache__
+client/.dart_tool
+client/.packages
+client/build
+conf/local.ini
+data/messages.json
+docker/dev/server.crt
+TODO.*
