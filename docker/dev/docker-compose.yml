@@ -4,6 +4,12 @@ volumes:
   db_data: {}
 
 services:
+  mongo:
+    network_mode: host
+    image: mongo
+    container_name: darkwing-dev-mongo
+    volumes:
+      - db_data:/data/db
   web:
     network_mode: host
     image: nginx:1.15

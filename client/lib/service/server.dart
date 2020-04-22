@@ -1,9 +1,27 @@
+// Darkwing: Your pen test sidekick!
+// Copyright (C) 2020 Mark E. Haase <mehaase@gmail.com>
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:html';
 
 import 'package:angular/angular.dart';
 import 'package:logging/logging.dart';
+
+final log = Logger('ServerService');
 
 /// A ServerException is thrown if a server-side error occurs while processing
 /// a request.
@@ -25,21 +43,19 @@ class ServerException implements Exception {
 @Injectable()
 class ServerService {
   /// Sends true when connected to server and false when disconnected.
-  Stream<bool> connected;
   bool isConnected = false;
 
   int _nextCommandId;
   Map<int, Completer> _pendingRequests;
   Future<WebSocket> _socketFuture;
   StreamController<bool> _connectedController;
-
-  final Logger log = new Logger('ServerService');
+  Stream<bool> _connected;
 
   /// Constructor.
   ServerService() {
     this._clearState();
     this._connectedController = new StreamController<bool>.broadcast();
-    this.connected = this._connectedController.stream;
+    this._connected = this._connectedController.stream;
   }
 
   /// Send a request to the server and return a future response.
@@ -64,7 +80,7 @@ class ServerService {
   /// Tell the server to connect immediately and automatically re-connect
   /// if the connection drops.
   stayConnected() async {
-    this.connected.listen((isConnected) async {
+    this._connected.listen((isConnected) async {
       if (!isConnected) {
         log.info('Will try to reconnect in 2 seconds.');
         await new Future.delayed(new Duration(seconds: 2));
@@ -89,7 +105,6 @@ class ServerService {
   /// Return a websocket wrapped in a future. If not already connected, this
   /// method will connect to the websocket before completing the future.
   Future<WebSocket> _getSocket() {
-    print('get socket');
     if (this._socketFuture == null) {
       var completer = new Completer<WebSocket>();
       var currentUri = Uri.parse(window.location.href);
@@ -100,28 +115,24 @@ class ServerService {
         port: currentUri.port,
         path: '/ws/',
       );
-      print('new websocket');
+
+      log.fine('Creating new WebSocket.');
       var socket = new WebSocket(socketUri.toString());
       socket.binaryType = 'arraybuffer';
       this._socketFuture = completer.future;
 
-      var connTimeout = new Future.delayed(new Duration(seconds: 5), () {
-        if (!this.isConnected) {
-          ('conn timeout; closing');
-          socket.close();
+      socket.onClose.first.then((event) {
+        log.info('Socket disconnected (${event.code}) ${event.reason}');
+        for (var reqCompleter in this._pendingRequests.values) {
+          reqCompleter.completeError('Connection is closed.');
         }
-      });
-
-      socket.onClose.listen((event) {
-        print('conn closed');
-        log.info('Socket disconnected.');
+        ;
         this._clearState();
         this._connectedController.add(false);
         this.isConnected = false;
       });
 
-      socket.onError.listen((event) {
-        print('conn error');
+      socket.onError.first.then((event) {
         var err = 'Server error!';
         log.severe(err, event);
         completer.completeError(err);
@@ -130,8 +141,7 @@ class ServerService {
 
       socket.onMessage.listen(this._handleServerMessage);
 
-      socket.onOpen.listen((event) {
-        print('conn open');
+      socket.onOpen.first.then((event) {
         log.info('Socket connected.');
         completer.complete(socket);
         this._connectedController.add(true);
@@ -169,7 +179,7 @@ class ServerService {
     } else if (response.containsKey('error')) {
       completer.completeError(new ServerException(response['error']));
     } else {
-      this.log.severe('Invalid server response: ' + response.toString());
+      log.severe('Invalid server response: ' + response.toString());
     }
   }
 }

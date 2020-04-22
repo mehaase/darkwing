@@ -1,0 +1,28 @@
+@import 'package:angular_components/css/material/material';
+@import 'package:angular_components/material_button/mixins';
+
+@include button-background-color('material-button.blue', $mat-blue);
+@include button-color('material-button.blue', $mat-white);
+
+div.upload-target {
+    padding: 1rem;
+    border: 3px dashed #bbbbbb;
+    background-color: #efefef;
+    font-size: 14pt;
+    text-align: center;
+    color: #888888;
+
+    &.drag-over {
+        background-color: white;
+        border: 3px dashed #7b7b7b;
+        color: #3c3c3c;
+    }
+}
+
+div.upload-button-container {
+    margin-top: 1rem;
+}
+
+input[type='file'] {
+    display: none;
+}

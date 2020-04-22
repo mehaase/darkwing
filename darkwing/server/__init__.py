@@ -1,16 +1,16 @@
-# DarkWing: Your pen test sidekick!
+# Darkwing: Your pen test sidekick!
 # Copyright (C) 2020 Mark E. Haase <mehaase@gmail.com>
-
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
@@ -35,16 +35,16 @@ from trio_jsonrpc import (
 from trio_jsonrpc.transport.ws import WebSocketTransport
 import trio_websocket
 
-# from .dns import resolve
-# from .geoip import query_geoip
-# from .whois import query_whois
 
 if typing.TYPE_CHECKING:
     import configparser
 
+# Import the server handler modules after dispatch is defined so that they can use the
+# object to register handler functions.
+dispatch = Dispatch()
+import darkwing.server.scan
 
 logger = logging.getLogger(__name__)
-dispatch = Dispatch()
 
 
 @dataclass
@@ -171,20 +171,14 @@ async def run_server(ip, port, base_context, task_status=trio.TASK_STATUS_IGNORE
                     # This is the heart of the server: wait for an incoming request and
                     # dispatch it.
                     async for request in rpc_conn.iter_requests():
-                        if "password" in request.params:
-                            log_params = dict(request.params)
-                            log_params["password"] = "********"
-                        else:
-                            log_params = request.params
                         logger.info(
-                            "%s:%s [user=%s] %s(%s)",
+                            "%s:%s [user=%s] %s()",
                             remote_address,
                             remote_port,
                             dispatch.ctx.user,
                             request.method,
-                            log_params,
                         )
-                        nursery.start_soon(
+                        conn_nursery.start_soon(
                             dispatch.handle_request, request, result_send
                         )
                 # When the serve_requests() returns, it means the server will not
@@ -197,6 +191,11 @@ async def run_server(ip, port, base_context, task_status=trio.TASK_STATUS_IGNORE
             logger.exception("An unhandled exception crashed a connection handler")
 
     server = await trio_websocket.serve_websocket(
-        connection_handler, ip, port, ssl_context=None, task_status=task_status,
+        connection_handler,
+        ip,
+        port,
+        ssl_context=None,
+        task_status=task_status,
+        max_message_size=10_485_760,  # 10MB
     )
     task_status.started(server)

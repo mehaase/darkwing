@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "darkwing"
 version = "0.1.0"
-description = "DarkWing is your pen test sidekick!"
+description = "Darkwing is your pen test sidekick!"
 authors = ["Mark E. Haase <mehaase@gmail.com>"]
 license = "GPL-3.0-only"
 
@@ -10,6 +10,9 @@ python = "^3.7"
 trio = "^0.13.0"
 trio-jsonrpc = "^0.3.0"
 watchdog = "^0.10.2"
+lxml = "^4.5.0"
+motor = "^2.1.0"
+trio_asyncio = "^0.11.0"
 
 [tool.poetry.dev-dependencies]
 trustme = "^0.6.0"
@@ -17,6 +20,7 @@ black = "^19.10b0"
 mypy = "^0.770"
 pytest = "^5.4.1"
 pytest-trio = "^0.5.2"
+pytest-cov = "^2.8.1"
 
 [build-system]
 requires = ["poetry>=0.12"]

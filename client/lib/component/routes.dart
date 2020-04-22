@@ -1,9 +1,27 @@
+// Darkwing: Your pen test sidekick!
+// Copyright (C) 2020 Mark E. Haase <mehaase@gmail.com>
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 import 'package:angular/angular.dart';
 import 'package:angular_router/angular_router.dart';
 
 import 'package:darkwing/component/hosts/list.template.dart'
     as host_list_template;
 import 'package:darkwing/component/none.template.dart' as none_template;
+import 'package:darkwing/component/scan/upload.template.dart'
+    as scan_upload_template;
 
 class RouteAuthorization {
   bool requiresLogin;
@@ -21,10 +39,15 @@ class Routes {
       component: none_template.NoneViewNgFactory,
       additionalData: RouteAuthorization(false));
   static final root = RouteDefinition.redirect(path: '', redirectTo: 'host');
+  static final scanUpload = RouteDefinition(
+      path: 'scan',
+      component: scan_upload_template.ScanUploadViewNgFactory,
+      additionalData: RouteAuthorization(true));
 
   static final all = <RouteDefinition>[
     hostList,
     none,
+    scanUpload,
   ];
 }
 

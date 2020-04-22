@@ -1,16 +1,16 @@
-# DarkWing: Your pen test sidekick!
+# Darkwing: Your pen test sidekick!
 # Copyright (C) 2020 Mark E. Haase <mehaase@gmail.com>
-
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
@@ -55,14 +55,14 @@ class Bootstrap:
 
     def run(self):
         """ Run the main task on the event loop. """
-        logger.info("DarkWing is starting...")
+        logger.info("Darkwing is starting...")
         try:
             trio.run(self._main, restrict_keyboard_interrupt_to_checkpoints=True)
         except KeyboardInterrupt:
             logger.warning("Received SIGINT: quitting")
         except TerminateSignal:
             logger.warning("Received SIGTERM: quitting")
-        logger.info("DarkWing has stopped.")
+        logger.info("Darkwing has stopped.")
 
     async def _main(self):
         """

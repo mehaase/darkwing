@@ -1,10 +1,22 @@
-# DarkWing
+# Darkwing
 
-DarkWing is your pen test sidekick!
+Darkwing is your pen test sidekick!
 
 ## Overview
 
 TODO
+
+## Environment Variables
+
+The application maintains most of its configuration in the database, but for aspects of
+configuration that cannot be stored in the database (e.g. database connection
+information), those are passed through the environment. Environment variables are a
+convenient way to configure the application when it is running inside a container.
+
+<dl>
+     <dt>DARKWING_MONGO_HOST</dt>
+     <dd>The hostname for the MongoDB server.</dd>
+</dl>
 
 ## Installation (Using Docker)
 

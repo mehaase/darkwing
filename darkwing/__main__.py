@@ -1,16 +1,16 @@
-# DarkWing: Your pen test sidekick!
+# Darkwing: Your pen test sidekick!
 # Copyright (C) 2020 Mark E. Haase <mehaase@gmail.com>
-
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
@@ -155,7 +155,7 @@ def configure_logging(log_level, log_file):
 
 def get_args():
     """ Parse command line arguments. """
-    arg_parser = argparse.ArgumentParser(description="DarkWing")
+    arg_parser = argparse.ArgumentParser(description="Darkwing")
     arg_parser.add_argument(
         "--log-level",
         default="info",
@@ -189,7 +189,7 @@ def get_args():
 
 
 def main():
-    """ Set up watchdog or run DarkWing. """
+    """ Set up watchdog or run Darkwing. """
     args = get_args()
     configure_logging(args.log_level, args.log_file)
     config = project_config()

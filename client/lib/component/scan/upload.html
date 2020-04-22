@@ -1,0 +1,17 @@
+<div class='upload-target'
+     [ngClass]='{"drag-over": dragOver}'
+     (dragover)='handleDragOver($event)'
+     (dragleave)='handleDragLeave($event)'
+     (drop)='handleDrop($event)'>
+  Drag and drop your scan files here, or…
+  <div class='upload-button-container'>
+    <material-button class='blue' (trigger)='scanInput.click()'>
+      Select a file
+    </material-button>
+  </div>
+  <material-progress *ngIf='uploadProgress != null'
+                     [activeProgress]='uploadProgress'
+                     [indeterminate]='uploadProgressIndeterminate'>
+  </material-progress>
+  <input #scanInput type='file' (change)='uploadScan(scanInput)'>
+</div>
