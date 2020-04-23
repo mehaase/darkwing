@@ -1,0 +1,54 @@
+<h1 *ngIf='host == null'>Loading…</h1>
+<div *ngIf='host != null'>
+  <h1>{{host['addresses']}} {{host['hostnames']}}</h1>
+  <dl>
+    <dt>Started</dt>
+    <dd>{{host['started'] ?? 'N/A'}}</dd>
+  </dl>
+  <dl>
+    <dt>Completed</dt>
+    <dd>{{host['completed'] ?? 'N/A'}}</dd>
+  </dl>
+  <dl>
+    <dt>State</dt>
+    <dd>{{host['state']}} (reason: {{host['state_reason']}})</dd>
+  </dl>
+  <h2>Addresses</h2>
+  <ul>
+    <li *ngFor='let addr of host["addresses"]'>{{addr}}</li>
+  </ul>
+  <h2>Hostnames</h2>
+  <ul>
+    <li *ngFor='let hostname of host["hostnames"]'>
+      {{hostname['name']}} (source: {{hostname['type']}})
+    </li>
+  </ul>
+  <h2>Ports <small></small></h2>
+  <div class='mdc-card mdc-card--outlined demo-size'>
+    <div class='mdc-card__media mdc-card__media--16-9 demo-card__media'></div>
+    <div class='demo-card__primary'>
+      <h2 class='demo-card__title'>Our Changing Planet</h2>
+      <h3 class='demo-card__subtitle'>by Kurt Wagner</h3>
+    </div>
+    <div class='demo-card__secondary'>
+      Visit ten places on our planet that are undergoing the biggest changes today.
+    </div>
+    <div class='mdc-card__actions'>
+      <div class='mdc-card__action-buttons'>
+        <material-button>Read</material-button>
+        <material-button>Bookmark</material-button>
+      </div>
+      <div class='mdc-card__action-icons'>
+        <material-button icon>
+          <material-icon icon='favorite_border'></material-icon>
+        </material-button>
+        <material-button icon>
+          <material-icon icon='share'></material-icon>
+        </material-button>
+        <material-button icon>
+          <material-icon icon='more_vert'></material-icon>
+        </material-button>
+      </div>
+    </div>
+  </div>
+</div>

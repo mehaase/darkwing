@@ -302,6 +302,14 @@ version = "2.20"
 
 [[package]]
 category = "main"
+description = "A Python implementation of the Maybe pattern."
+name = "pymaybe"
+optional = false
+python-versions = "*"
+version = "0.1.6"
+
+[[package]]
+category = "main"
 description = "Python driver for MongoDB <http://www.mongodb.org>"
 name = "pymongo"
 optional = false
@@ -580,7 +588,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "4691ad191fa9f32526b4799420937bb858ef750c7e79193e621e0013702f8725"
+content-hash = "8557c7b4a221c17d11a12193b0ac3582829c30577770d7cbb74a6cbd2098f481"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -820,6 +828,10 @@ py = [
 pycparser = [
     {file = "pycparser-2.20-py2.py3-none-any.whl", hash = "sha256:7582ad22678f0fcd81102833f60ef8d0e57288b6b5fb00323d101be910e35705"},
     {file = "pycparser-2.20.tar.gz", hash = "sha256:2d475327684562c3a96cc71adf7dc8c4f0565175cf86b6d7a404ff4c771f15f0"},
+]
+pymaybe = [
+    {file = "pymaybe-0.1.6-py2.py3-none-any.whl", hash = "sha256:01d0f71b98e1c155ecfecd9db44ce49f37ae374b5cb8f1d27c0ee00c3d7aa4dd"},
+    {file = "pymaybe-0.1.6.tar.gz", hash = "sha256:77ed1602e1b9e8b05dccd0d84891ede4ee2004728170e52af7f9c08d4c62378c"},
 ]
 pymongo = [
     {file = "pymongo-3.10.1-cp27-cp27m-macosx_10_14_intel.whl", hash = "sha256:a732838c78554c1257ff2492f5c8c4c7312d0aecd7f732149e255f3749edd5ee"},

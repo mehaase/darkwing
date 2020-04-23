@@ -38,10 +38,13 @@ import trio_websocket
 
 if typing.TYPE_CHECKING:
     import configparser
+    from motor.motor_asyncio import AsyncIOMotorClient
+
 
 # Import the server handler modules after dispatch is defined so that they can use the
 # object to register handler functions.
 dispatch = Dispatch()
+import darkwing.server.host
 import darkwing.server.scan
 
 logger = logging.getLogger(__name__)
@@ -50,6 +53,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class DispatchContext:
     config: configparser.ConfigParser
+    db: AsyncIOMotorClient
     # token_signer: TimedJSONWebSignatureSerializer
     user: typing.Optional[str] = None
 
@@ -57,11 +61,6 @@ class DispatchContext:
 # class NotAuthorizedError(JsonRpcApplicationError):
 #     ERROR_CODE = -1
 #     ERROR_MESSAGE = "The user is not authorized to execute this method."
-
-
-# class RegistrationError(JsonRpcApplicationError):
-#     ERROR_CODE = -2
-#     ERROR_MESSAGE = "An error occurred during registration."
 
 
 # def login_required(fn):
@@ -76,11 +75,6 @@ class DispatchContext:
 #         return await fn(*args, **kwargs)
 
 #     return wrapper
-
-
-@dispatch.handler
-async def hello_world(name):
-    return {"greeting": f"hello, {name}!"}
 
 
 # @dispatch.handler

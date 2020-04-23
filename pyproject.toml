@@ -1,18 +1,19 @@
 [tool.poetry]
 name = "darkwing"
-version = "0.1.0"
+version = "2020.04.21"
 description = "Darkwing is your pen test sidekick!"
 authors = ["Mark E. Haase <mehaase@gmail.com>"]
 license = "GPL-3.0-only"
 
 [tool.poetry.dependencies]
 python = "^3.7"
-trio = "^0.13.0"
-trio-jsonrpc = "^0.3.0"
-watchdog = "^0.10.2"
 lxml = "^4.5.0"
 motor = "^2.1.0"
+trio = "^0.13.0"
 trio_asyncio = "^0.11.0"
+trio-jsonrpc = "^0.3.0"
+watchdog = "^0.10.2"
+pymaybe = "^0.1.6"
 
 [tool.poetry.dev-dependencies]
 trustme = "^0.6.0"

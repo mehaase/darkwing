@@ -39,13 +39,7 @@ Map<String, Level> LOG_LEVELS = const {
 
 @Component(selector: 'app', templateUrl: 'app.html', styleUrls: const [
   'package:angular_components/app_layout/layout.scss.css',
-  // 'app.scss.css'
-], styles: const [
-  '''
-    material-content {
-      padding: 1rem;
-    }
-  '''
+  'app.css'
 ], directives: const [
   coreDirectives,
   MaterialButtonComponent,

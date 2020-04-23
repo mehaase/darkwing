@@ -20,32 +20,37 @@ import 'dart:typed_data';
 
 import 'package:angular/angular.dart';
 import 'package:angular_components/angular_components.dart';
+import 'package:angular_router/angular_router.dart';
 import 'package:logging/logging.dart';
 
 import 'package:darkwing/service/server.dart';
 
-final log = Logger('ScanUploadView');
+final log = Logger('ScanListView');
 
-@Component(
-    selector: 'scan-upload',
-    templateUrl: 'upload.html',
-    styleUrls: const [
-      'upload.css'
-    ],
-    directives: const [
-      coreDirectives,
-      MaterialButtonComponent,
-      MaterialProgressComponent,
-    ])
-class ScanUploadView {
+@Component(selector: 'scan-list', templateUrl: 'list.html', styleUrls: const [
+  'list.css'
+], directives: const [
+  coreDirectives,
+  MaterialButtonComponent,
+  MaterialProgressComponent,
+])
+class ScanListView implements OnActivate {
+  // TODO split upload into separate component?
   bool dragOver = false;
   num uploadProgress;
   bool uploadProgressIndeterminate = false;
+  List<Map> scans;
 
+  Router _router;
   ServerService _server;
 
   /// Constructor.
-  ScanUploadView(this._server);
+  ScanListView(this._router, this._server);
+
+  /// Go to scan detail page.
+  gotoScanDetail(String scanId) async {
+    await this._router.navigate('/scan/${scanId}');
+  }
 
   /// Handle when an item is dragged over the target.
   handleDragOver(MouseEvent e) {
@@ -66,9 +71,21 @@ class ScanUploadView {
     this._readFile(e.dataTransfer.files[0]);
   }
 
+  /// Called when entering this route.
+  @override
+  onActivate(_, RouterState current) {
+    this._loadScans();
+  }
+
   /// Handle the file dialog.
   uploadScan(FileUploadInputElement input) {
     this._readFile(input.files[0]);
+  }
+
+  /// Load scans from the server.
+  _loadScans() async {
+    var result = await this._server.sendRequest('list_scans');
+    this.scans = List<Map>.from(result['scans']);
   }
 
   /// A helper which reads a File object and then calls _uploadFile.
@@ -99,5 +116,6 @@ class ScanUploadView {
       this.uploadProgress = null;
       this.uploadProgressIndeterminate = false;
     }
+    await this._loadScans();
   }
 }

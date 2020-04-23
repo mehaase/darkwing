@@ -17,37 +17,51 @@
 import 'package:angular/angular.dart';
 import 'package:angular_router/angular_router.dart';
 
-import 'package:darkwing/component/hosts/list.template.dart'
+import 'package:darkwing/component/host/detail.template.dart'
+    as host_detail_template;
+import 'package:darkwing/component/host/list.template.dart'
     as host_list_template;
 import 'package:darkwing/component/none.template.dart' as none_template;
-import 'package:darkwing/component/scan/upload.template.dart'
-    as scan_upload_template;
+import 'package:darkwing/component/scan/detail.template.dart'
+    as scan_detail_template;
+import 'package:darkwing/component/scan/list.template.dart'
+    as scan_list_template;
 
 class RouteAuthorization {
-  bool requiresLogin;
+  bool login;
 
-  RouteAuthorization(this.requiresLogin);
+  RouteAuthorization({this.login});
 }
 
 class Routes {
+  static final hostDetail = RouteDefinition(
+      path: 'host/:id',
+      component: host_detail_template.HostDetailViewNgFactory,
+      additionalData: RouteAuthorization(login: true));
   static final hostList = RouteDefinition(
-      path: 'host', // temporarily an alias to terms view
+      path: 'host',
       component: host_list_template.HostListViewNgFactory,
-      additionalData: RouteAuthorization(true));
+      additionalData: RouteAuthorization(login: true));
   static final none = RouteDefinition(
       path: 'none',
       component: none_template.NoneViewNgFactory,
-      additionalData: RouteAuthorization(false));
+      additionalData: RouteAuthorization(login: false));
   static final root = RouteDefinition.redirect(path: '', redirectTo: 'host');
-  static final scanUpload = RouteDefinition(
+  static final scanDetail = RouteDefinition(
+      path: 'scan/:id',
+      component: scan_detail_template.ScanDetailViewNgFactory,
+      additionalData: RouteAuthorization(login: true));
+  static final scanList = RouteDefinition(
       path: 'scan',
-      component: scan_upload_template.ScanUploadViewNgFactory,
-      additionalData: RouteAuthorization(true));
+      component: scan_list_template.ScanListViewNgFactory,
+      additionalData: RouteAuthorization(login: true));
 
   static final all = <RouteDefinition>[
+    hostDetail,
     hostList,
     none,
-    scanUpload,
+    scanDetail,
+    scanList,
   ];
 }
 

@@ -26,7 +26,7 @@ from threading import Timer
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
-from . import project_config, project_path
+from . import project_path
 from .bootstrap import Bootstrap
 
 reloader_log = logging.getLogger("reloader")
@@ -192,13 +192,12 @@ def main():
     """ Set up watchdog or run Darkwing. """
     args = get_args()
     configure_logging(args.log_level, args.log_file)
-    config = project_config()
 
     if args.reload and os.getenv("WATCHDOG_RUNNING") is None:
         reloader = Reloader()
         reloader.run()
     else:
-        bootstrap = Bootstrap(config, args)
+        bootstrap = Bootstrap(args)
         bootstrap.run()
 
 

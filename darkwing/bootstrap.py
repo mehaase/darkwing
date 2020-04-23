@@ -17,13 +17,16 @@
 from __future__ import annotations
 from dataclasses import dataclass
 import logging
+import os
 import signal
 import typing
 
 # from itsdangerous import TimedJSONWebSignatureSerializer
 import trio
+import trio_asyncio
 
-from . import project_path
+from . import AppConfig, project_path
+from .database import connect_db
 
 # from .database import Database
 from .server import DispatchContext, run_server
@@ -43,15 +46,13 @@ class TerminateSignal(Exception):
 class Bootstrap:
     """ Main class for bootstrapping the application. """
 
-    def __init__(self, config, args):
+    def __init__(self, args):
         """
         Constructor.
 
-        :param config: Output of config parser.
         :param args: Output of argparse.
         """
         self._args = args
-        self._config = config
 
     def run(self):
         """ Run the main task on the event loop. """
@@ -70,28 +71,30 @@ class Bootstrap:
 
         :returns: This function runs until cancelled.
         """
-        async with trio.open_nursery() as nursery:
-            nursery.start_soon(self._sigterm_receiver)
+        config = AppConfig.from_env(os.environ)
+        async with trio_asyncio.open_loop() as loop:
+            async with trio.open_nursery() as nursery:
+                nursery.start_soon(self._sigterm_receiver)
 
-            # Set up database.
-            # data_dir = project_path("data")
-            # db_file = data_dir / self._config["database"]["name"]
-            # db = Database(db_file)
+                # Set up database.
+                db = connect_db(config.mongo_host)
 
-            # Configuration for signed authentication tokens.
-            # token_signer = TimedJSONWebSignatureSerializer(
-            #     self._config["authentication"]["token_signing_key"],
-            #     expires_in=int(self._config["authentication"]["token_expiration"]),
-            # )
+                # Configuration for signed authentication tokens.
+                # token_signer = TimedJSONWebSignatureSerializer(
+                #     self._config["authentication"]["token_signing_key"],
+                #     expires_in=int(self._config["authentication"]["token_expiration"]),
+                # )
 
-            # Set up server.
-            context = DispatchContext(config=self._config)
-            server = await nursery.start(
-                run_server, self._args.ip, self._args.port, context
-            )
-            logger.info(
-                "The server is listening on ws://%s:%d/ws/", self._args.ip, server.port,
-            )
+                # Set up server.
+                context = DispatchContext(config=config, db=db)
+                server = await nursery.start(
+                    run_server, self._args.ip, self._args.port, context
+                )
+                logger.info(
+                    "The server is listening on ws://%s:%d/ws/",
+                    self._args.ip,
+                    server.port,
+                )
 
     async def _sigterm_receiver(self):
         with trio.open_signal_receiver(signal.SIGTERM) as signal_aiter:

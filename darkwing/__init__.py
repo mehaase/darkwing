@@ -44,7 +44,7 @@ def async_in_thread(fn):
     return wrapper
 
 
-class Configuration:
+class AppConfig:
     """
     Contains some configuration that is loaded from environment variables.
 

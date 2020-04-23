@@ -6,11 +6,13 @@
 
 div.upload-target {
     padding: 1rem;
+    margin-bottom: 1rem;
     border: 3px dashed #bbbbbb;
     background-color: #efefef;
     font-size: 14pt;
     text-align: center;
     color: #888888;
+    border-radius: 4px;
 
     &.drag-over {
         background-color: white;
@@ -25,4 +27,8 @@ div.upload-button-container {
 
 input[type='file'] {
     display: none;
+}
+
+.material-table tr {
+    cursor: pointer;
 }
