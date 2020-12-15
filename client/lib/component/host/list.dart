@@ -1,4 +1,4 @@
-// Darkwing: Your pen test sidekick!
+// Darkwing: Let's get IP-rangerous!
 // Copyright (C) 2020 Mark E. Haase <mehaase@gmail.com>
 //
 // This program is free software: you can redistribute it and/or modify

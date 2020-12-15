@@ -1,4 +1,4 @@
-# Darkwing: Your pen test sidekick!
+# Darkwing: Let's get IP-rangerous!
 # Copyright (C) 2020 Mark E. Haase <mehaase@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -21,14 +21,14 @@ from datetime import datetime
 from enum import Enum
 from ipaddress import IPv4Address, IPv6Address
 import typing
-import xml.sax
+from xml.sax.handler import ContentHandler
 
 
 class NmapXmlParseException(Exception):
     """ Indicates an error while parsing Nmap XML. """
 
 
-class NmapXmlParser(xml.sax.ContentHandler):
+class NmapXmlParser(ContentHandler):
     """
     A streaming nmap parser.
 

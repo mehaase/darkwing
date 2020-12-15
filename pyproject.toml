@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "darkwing"
 version = "2020.04.21"
-description = "Darkwing is your pen test sidekick!"
+description = "Darkwing is Let's get IP-rangerous!"
 authors = ["Mark E. Haase <mehaase@gmail.com>"]
 license = "GPL-3.0-only"
 

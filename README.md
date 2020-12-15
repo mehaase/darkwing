@@ -1,6 +1,6 @@
 # Darkwing
 
-Darkwing is your pen test sidekick!
+Darkwing is Let's get IP-rangerous!
 
 ## Overview
 
@@ -27,9 +27,6 @@ TODO
 TODO
 
 ## Installation (for local development)
-
-**Note this requires Docker on Linux. It does not work on Docker for MacOS. (Not sure
-about Docker for Windows.)**
 
 The desired development environment looks like this:
 
@@ -83,8 +80,9 @@ darkwing $ cd docker/dev
 darkwing/docker/dev $ docker-compose up
 ```
 
-This command starts the nginx container inside docker. Next, you should run the two
-other components directly on your host. In a new terminal, start the websocket server.
+This command starts the nginx and mongo containers inside docker. Next, you should run
+the two other components directly on your host. In a new terminal, start the websocket
+server.
 
 ```
 darkwing $ poetry run python -m darkwing --reload
