@@ -1,10 +1,8 @@
-# Darkwing
-
-Darkwing is Let's get IP-rangerous!
+# Darkwing: Let's get IP-rangerous!
 
 ## Overview
 
-TODO
+Darkwing is your pen test sidekick.
 
 ## Environment Variables
 
