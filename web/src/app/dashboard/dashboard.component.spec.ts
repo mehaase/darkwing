@@ -1,5 +1,5 @@
 // Darkwing: Let's get IP-rangerous!
-// Copyright (C) 2020 Mark E. Haase <mehaase@gmail.com>
+// Copyright (C) 2021 Mark E. Haase <mehaase@gmail.com>
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -12,9 +12,7 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-import { LayoutModule } from '@angular/cdk/layout';
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.import { LayoutModule } from '@angular/cdk/layout';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatButtonModule } from '@angular/material/button';

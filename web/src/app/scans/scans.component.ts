@@ -1,5 +1,5 @@
 // Darkwing: Let's get IP-rangerous!
-// Copyright (C) 2020 Mark E. Haase <mehaase@gmail.com>
+// Copyright (C) 2021 Mark E. Haase <mehaase@gmail.com>
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -13,21 +13,25 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
 import { Component, OnInit } from '@angular/core';
 
+/**
+ * Display scan data and allow the user to submit scan data.
+ */
 @Component({
   selector: 'app-scans',
   templateUrl: './scans.component.html',
   styleUrls: ['./scans.component.scss']
 })
-export class ScansComponent implements OnInit {
+export class ScansComponent {
 
   constructor() { }
 
-  ngOnInit(): void {
-  }
-
+  /**
+   * Upload scans to the server.
+   *
+   * @param files A list of scans to upload
+   */
   uploadFiles(files: FileList): void {
     console.log(files)
   }
