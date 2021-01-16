@@ -1,0 +1,13 @@
+<div class='upload-message'>
+    <div class='upload-icon'>
+        <fa-icon [icon]='faFileUpload' size='4x'></fa-icon>
+    </div>
+    <div class='upload-message'>
+        Drop Nmap files here or…
+    </div>
+    <div>
+        <button mat-flat-button (click)='selectFiles()'>Select files</button>
+    </div>
+    <input #filePicker type="file" accept='.xml' (change)='filesPicked($event)'
+        multiple>
+</div>

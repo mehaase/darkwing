@@ -1,0 +1,26 @@
+@import '../../theme.scss';
+
+:host {
+    display: block;
+    border: 2px dotted mat-color($primary);
+    padding: 20px;
+
+    &.file-over {
+        border-style: solid;
+    }
+
+    .upload-icon {
+        text-align: center;
+        margin: 1rem;
+    }
+
+    .upload-message {
+        font-size: 14pt;
+        text-align: center;
+        margin: 0.5rem;
+    }
+
+    input[type='file'] {
+        display: none;
+    }
+}
