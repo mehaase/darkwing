@@ -18,7 +18,7 @@ from datetime import datetime
 from pathlib import Path
 from ipaddress import IPv4Address
 
-from darkwing.nmap import NmapXmlParser
+from darkwing.nmap.parser import NmapXmlParser
 
 
 def test_incremental_parse():
@@ -195,7 +195,14 @@ def test_incremental_parse():
     </nmaprun>"""
     )
     events = list(parser.events())
-    assert len(events) == 2
+    assert len(events) == 3
+    finished = events[2]
+    assert finished.finished == datetime(2020, 4, 21, 12, 54, 55)
+    assert (
+        finished.summary
+        == "Nmap done at Tue Apr 21 08:54:55 2020; 256 IP addresses (3 hosts up) scanned in 11.42 seconds"
+    )
+    assert finished.exit == "success"
 
 
 def test_scan_file():
@@ -267,5 +274,5 @@ def test_scan_file():
     }
 
     # Check that there are 26 remaining events.
-    assert len(list(event)) == 26
+    assert len(list(event)) == 27
 

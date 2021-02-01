@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import { Component } from '@angular/core';
+import { ServerService } from './server.service';
 
 @Component({
   selector: 'app-root',
@@ -22,4 +23,15 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'Darkwing';
+
+  constructor(private serverService: ServerService) {
+    this.doStuff();
+  }
+
+  public async doStuff() {
+    // TODO refactor the connection to the service
+    await this.serverService.connect('ws://localhost:8080/ws/');
+    let result = await this.serverService.invoke('list_scans');
+    console.log('result ' + result);
+  }
 }

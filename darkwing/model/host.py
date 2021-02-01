@@ -36,33 +36,19 @@ class Host:
     addresses: typing.List[typing.Union[IPv4Address, IPv6Address]] = field(
         default_factory=list
     )
-    hostnames: typing.List[Hostname] = field(default_factory=list)
+    hostnames: typing.List[str] = field(default_factory=list)
     ports: typing.List[Port] = field(default_factory=list)
-
-
-@dataclass
-class Hostname:
-    name: str
-    type_: typing.Optional[str] = None
 
 
 class Transport(Enum):
     UDP = 0
     TCP = 1
 
-    @classmethod
-    def from_nmap_str(cls, t: str):
-        return {"tcp": cls.TCP, "udp": cls.UDP}[t]
-
 
 class PortState(Enum):
     OPEN = 0
     FILTERED = 1
     CLOSED = 2
-
-    @classmethod
-    def from_nmap_str(cls, t: str):
-        return {"open": cls.OPEN, "filtered": cls.FILTERED, "closed": cls.CLOSED}[t]
 
 
 @dataclass

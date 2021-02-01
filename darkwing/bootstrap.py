@@ -21,14 +21,12 @@ import os
 import signal
 import typing
 
-# from itsdangerous import TimedJSONWebSignatureSerializer
 import trio
 import trio_asyncio
 
 from . import AppConfig, project_path
 from .database import connect_db
 
-# from .database import Database
 from .server import DispatchContext, run_server
 
 
@@ -58,7 +56,7 @@ class Bootstrap:
         """ Run the main task on the event loop. """
         logger.info("Darkwing is starting...")
         try:
-            trio.run(self._main, restrict_keyboard_interrupt_to_checkpoints=True)
+            trio_asyncio.run(self._main)
         except KeyboardInterrupt:
             logger.warning("Received SIGINT: quitting")
         except TerminateSignal:
@@ -72,29 +70,20 @@ class Bootstrap:
         :returns: This function runs until cancelled.
         """
         config = AppConfig.from_env(os.environ)
-        async with trio_asyncio.open_loop() as loop:
-            async with trio.open_nursery() as nursery:
-                nursery.start_soon(self._sigterm_receiver)
+        async with trio.open_nursery() as nursery:
+            nursery.start_soon(self._sigterm_receiver)
 
-                # Set up database.
-                db = connect_db(config.mongo_host)
+            # Set up database.
+            db = connect_db(config.mongo_host)
 
-                # Configuration for signed authentication tokens.
-                # token_signer = TimedJSONWebSignatureSerializer(
-                #     self._config["authentication"]["token_signing_key"],
-                #     expires_in=int(self._config["authentication"]["token_expiration"]),
-                # )
-
-                # Set up server.
-                context = DispatchContext(config=config, db=db)
-                server = await nursery.start(
-                    run_server, self._args.ip, self._args.port, context
-                )
-                logger.info(
-                    "The server is listening on ws://%s:%d/ws/",
-                    self._args.ip,
-                    server.port,
-                )
+            # Set up server.
+            context = DispatchContext(config=config, db=db)
+            server = await nursery.start(
+                run_server, self._args.ip, self._args.port, context
+            )
+            logger.info(
+                "The server is listening on ws://%s:%d/ws/", self._args.ip, server.port,
+            )
 
     async def _sigterm_receiver(self):
         with trio.open_signal_receiver(signal.SIGTERM) as signal_aiter:

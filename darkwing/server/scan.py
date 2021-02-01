@@ -26,8 +26,7 @@ import trio
 
 from . import dispatch
 from ..database.scan import get_host_scan, insert_host_scan, list_host_scans
-from ..model.host import Host, Hostname, HostState, Port, PortState, Service, Transport
-from ..model.scan import HostScan
+from ..nmap.loader import load_scan
 
 
 logger = logging.getLogger(__name__)
@@ -36,7 +35,7 @@ logger = logging.getLogger(__name__)
 @dispatch.handler
 async def upload_scan(base64_data: str) -> dict:
     data = b64decode(base64_data.encode("utf8"))
-    scan = await trio.to_thread.run_sync(parse_nmap, data)
+    scan = await trio.to_thread.run_sync(load_scan, data)
     scan_id = await insert_host_scan(dispatch.ctx.db, scan)
     return {"scan_id": scan_id}
 
@@ -49,16 +48,3 @@ async def list_scans() -> dict:
 @dispatch.handler
 async def get_scan(scan_id: str) -> dict:
     return await get_host_scan(dispatch.ctx.db, scan_id)
-
-
-def parse_nmap(xml_data: bytes) -> HostScan:
-    nmaprun = etree.fromstring(xml_data)
-    scan = HostScan("nmap", nmaprun.get("version"))
-    scan.command_line = nmaprun.get("args")
-    scan.started = datetime.fromtimestamp(int(nmaprun.get("start")))
-
-    for child in nmaprun:
-        if child.tag == "host":
-            scan.hosts.append(parse_nmap_host(child))
-
-    return scan

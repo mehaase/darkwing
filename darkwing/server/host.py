@@ -14,7 +14,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from __future__ import annotations
 from base64 import b64decode
 from datetime import datetime
 from ipaddress import IPv4Address, IPv6Address
@@ -23,14 +22,12 @@ import typing
 
 import bson
 from lxml import etree
+from motor.motor_asyncio import AsyncIOMotorClient
 from pymaybe import maybe
 import trio
 from trio_asyncio import aio_as_trio
 
 from . import dispatch
-
-if typing.TYPE_CHECKING:
-    from motor.motor_asyncio import AsyncIOMotorClient
 
 
 logger = logging.getLogger(__name__)
@@ -69,7 +66,9 @@ async def get_host(host_id: str) -> dict:
 
 
 @aio_as_trio
-async def _db_get_host(db: AsyncIOMotorClient, host_id: str) -> list:
+async def _db_get_host(
+    db: AsyncIOMotorClient, host_id: str
+) -> typing.Dict[str, typing.Any]:
     """ List host scan documents. """
     doc = await db.foo_project.host.find_one({"_id": bson.ObjectId(host_id)})
     return {

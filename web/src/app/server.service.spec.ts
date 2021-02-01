@@ -13,31 +13,19 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
-import { Component, OnInit } from '@angular/core';
-import { ScansService } from '../scans.service';
+import { TestBed } from '@angular/core/testing';
 
-/**
- * Display scan data and allow the user to submit scan data.
- */
-@Component({
-  selector: 'app-scans',
-  templateUrl: './scans.component.html',
-  styleUrls: ['./scans.component.scss']
-})
-export class ScansComponent {
-  /**
-   * Constructor
-   *
-   * @param service
-   */
-  constructor(private service: ScansService) { }
+import { ServerService } from './server.service';
 
-  /**
-   * Upload scans to the server.
-   *
-   * @param files A list of scans to upload
-   */
-  public async uploadFiles(files: FileList) {
-    await this.service.uploadScans(files);
-  }
-}
+describe('ServerService', () => {
+  let service: ServerService;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({});
+    service = TestBed.inject(ServerService);
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
+});

@@ -1,16 +1,16 @@
 [tool.poetry]
 name = "darkwing"
 version = "2020.04.21"
-description = "Darkwing is Let's get IP-rangerous!"
+description = "Darkwing: Let's get IP-rangerous!"
 authors = ["Mark E. Haase <mehaase@gmail.com>"]
 license = "GPL-3.0-only"
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.9"
 lxml = "^4.5.0"
 motor = "^2.1.0"
-trio = "^0.13.0"
-trio_asyncio = "^0.11.0"
+trio = "^0.18.0"
+trio-asyncio = "^0.12.0"
 trio-jsonrpc = "^0.3.0"
 watchdog = "^0.10.2"
 pymaybe = "^0.1.6"
@@ -18,7 +18,7 @@ pymaybe = "^0.1.6"
 [tool.poetry.dev-dependencies]
 trustme = "^0.6.0"
 black = "^19.10b0"
-mypy = "^0.770"
+mypy = "^0.800"
 pytest = "^5.4.1"
 pytest-trio = "^0.5.2"
 pytest-cov = "^2.8.1"

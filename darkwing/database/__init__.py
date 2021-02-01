@@ -14,11 +14,24 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import multiprocessing
 import os
-import typing
 
-from motor.motor_asyncio import AsyncIOMotorClient
+import motor.motor_asyncio
+import motor.frameworks.asyncio
+from trio_asyncio import TrioExecutor
 
 
-def connect_db(host: str) -> AsyncIOMotorClient:
-    return AsyncIOMotorClient(host)
+def connect_db(host: str) -> motor.motor_asyncio.AsyncIOMotorClient:
+    _patch_motor()
+    return motor.motor_asyncio.AsyncIOMotorClient(host)
+
+
+def _patch_motor():
+    """ A hack to work around motor incompatibility with trio_asyncio. """
+    if "MOTOR_MAX_WORKERS" in os.environ:
+        max_workers = int(os.environ["MOTOR_MAX_WORKERS"])
+    else:
+        max_workers = multiprocessing.cpu_count() * 5
+
+    motor.frameworks.asyncio._EXECUTOR = TrioExecutor(max_workers=max_workers)
