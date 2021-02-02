@@ -38,6 +38,8 @@ logger = logging.getLogger(__name__)
 
 
 class TerminateSignal(Exception):
+    """ This exception is raised to indicate that a SIGTERM was received. """
+
     pass
 
 
@@ -56,7 +58,7 @@ class Bootstrap:
         """ Run the main task on the event loop. """
         logger.info("Darkwing is starting...")
         try:
-            trio_asyncio.run(self._main)
+            trio.run(self._main, restrict_keyboard_interrupt_to_checkpoints=True)
         except KeyboardInterrupt:
             logger.warning("Received SIGINT: quitting")
         except TerminateSignal:
@@ -70,22 +72,30 @@ class Bootstrap:
         :returns: This function runs until cancelled.
         """
         config = AppConfig.from_env(os.environ)
-        async with trio.open_nursery() as nursery:
-            nursery.start_soon(self._sigterm_receiver)
+        async with trio_asyncio.open_loop() as loop:
+            async with trio.open_nursery() as nursery:
+                nursery.start_soon(self._sigterm_receiver)
 
-            # Set up database.
-            db = connect_db(config.mongo_host)
+                # Set up database.
+                db = connect_db(config.mongo_host)
 
-            # Set up server.
-            context = DispatchContext(config=config, db=db)
-            server = await nursery.start(
-                run_server, self._args.ip, self._args.port, context
-            )
-            logger.info(
-                "The server is listening on ws://%s:%d/ws/", self._args.ip, server.port,
-            )
+                # Set up server.
+                context = DispatchContext(config=config, db=db)
+                server = await nursery.start(
+                    run_server, self._args.ip, self._args.port, context
+                )
+                logger.info(
+                    "The server is listening on ws://%s:%d/ws/",
+                    self._args.ip,
+                    server.port,
+                )
 
     async def _sigterm_receiver(self):
+        """
+        This task handles SIGTERM signals.
+
+        :raises TerminateSignal: when SIGTERM is received.
+        """
         with trio.open_signal_receiver(signal.SIGTERM) as signal_aiter:
             async for _ in signal_aiter:
                 raise TerminateSignal()

@@ -32,22 +32,25 @@ async def insert_host_scan(db: AsyncIOMotorClient, scan: HostScan) -> bson.Objec
     Insert a new scan document and new host documents.
     """
     host_docs: typing.List[dict] = list()
-    for host in scan.hosts:
-        host_docs.append(
-            {
-                "started": host.started,
-                "completed": host.completed,
-                "state": maybe(host.state).name.or_else(None),
-                "state_reason": host.state_reason,
-                "addresses": [str(a) for a in host.addresses],
-                "hostnames": [
-                    {"name": h.name, "type": h.type_} for h in host.hostnames
-                ],
-                "ports": [_port_to_dict(p) for p in host.ports],
-            }
-        )
-    result = await db.foo_project.host.insert_many(host_docs)
-    host_ids = result.inserted_ids
+    if scan.hosts:
+        # TODO batch inserts
+        for host in scan.hosts:
+            host_docs.append(
+                {
+                    "started": host.started,
+                    "completed": host.completed,
+                    "state": maybe(host.state).name.or_else(None),
+                    "state_reason": host.state_reason,
+                    "addresses": [str(a) for a in host.addresses],
+                    "hostnames": list(host.hostnames),
+                    "ports": [_port_to_dict(p) for p in host.ports],
+                }
+            )
+
+        result = await db.darkwing.host.insert_many(host_docs)
+        host_ids = result.inserted_ids
+    else:
+        host_ids = list()
 
     scan_doc = {
         "scanner": scan.scanner,
@@ -57,7 +60,7 @@ async def insert_host_scan(db: AsyncIOMotorClient, scan: HostScan) -> bson.Objec
         "completed": scan.completed,
         "hosts": host_ids,
     }
-    result = await db.foo_project.scan.insert_one(scan_doc)
+    result = await db.darkwing.scan.insert_one(scan_doc)
     scan_id = result.inserted_id
     return str(scan_id)
 
@@ -65,7 +68,7 @@ async def insert_host_scan(db: AsyncIOMotorClient, scan: HostScan) -> bson.Objec
 @aio_as_trio
 async def list_host_scans(db: AsyncIOMotorClient) -> list:
     """ List host scan documents. """
-    cursor = db.foo_project.scan.find()
+    cursor = db.darkwing.scan.find()
     scan_docs: typing.List[dict] = list()
     async for doc in cursor:
         scan_docs.append(
@@ -85,7 +88,7 @@ async def list_host_scans(db: AsyncIOMotorClient) -> list:
 @aio_as_trio
 async def get_host_scan(db: AsyncIOMotorClient, id_: bson.ObjectId) -> dict:
     """ Get a scan document. """
-    doc = await db.foo_project.scan.find_one({"_id": bson.ObjectId(id_)})
+    doc = await db.darkwing.scan.find_one({"_id": bson.ObjectId(id_)})
     return {
         "scan_id": str(doc["_id"]),
         "scanner": doc["scanner"],

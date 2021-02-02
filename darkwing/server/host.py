@@ -42,7 +42,7 @@ async def list_hosts() -> dict:
 async def _db_list_hosts(db: AsyncIOMotorClient) -> list:
     """ List host scan documents. """
     # TODO projection/aggregation to count ports?
-    cursor = db.foo_project.host.find()
+    cursor = db.darkwing.host.find()
     host_docs: typing.List[dict] = list()
     async for doc in cursor:
         host_docs.append(
@@ -70,7 +70,7 @@ async def _db_get_host(
     db: AsyncIOMotorClient, host_id: str
 ) -> typing.Dict[str, typing.Any]:
     """ List host scan documents. """
-    doc = await db.foo_project.host.find_one({"_id": bson.ObjectId(host_id)})
+    doc = await db.darkwing.host.find_one({"_id": bson.ObjectId(host_id)})
     return {
         "host_id": str(doc["_id"]),
         "started": maybe(doc["started"]).isoformat().or_else(None),

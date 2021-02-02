@@ -41,18 +41,26 @@ class ProcessWatchdog(FileSystemEventHandler):
         self._reload_timer = None
 
     def dispatch(self, event):
-        """ Restart the subprocess if a source/config file changed. """
+        """ Handle filesystem events. """
         path = event.src_path
         file = os.path.basename(path)
+        # TODO: rm
+        reloader_log.info("File %s: %s", event.event_type, event.src_path)
 
-        if (file.endswith(".py") and not file.startswith("test_")) or file.endswith(
-            ".ini"
-        ):
+        if self._file_should_trigger_reload(file):
             reloader_log.info("File %s: %s", event.event_type, event.src_path)
             if self._reload_timer:
                 self._reload_timer.cancel()
             self._reload_timer = Timer(1.0, self.reload)
             self._reload_timer.start()
+
+    def _file_should_trigger_reload(self, file):
+        """ Return True if this file should trigger a reload. """
+        if file.endswith(".py") and not file.startswith("test_"):
+            return True
+        elif file.endswith(".ini"):
+            return True
+        return False
 
     def join(self):
         """ Wait for subprocess to exit. """
@@ -63,6 +71,7 @@ class ProcessWatchdog(FileSystemEventHandler):
             pass
 
     def reload(self):
+        """ Shut down the target process and start a new one. """
         self._reload_timer.cancel()
         self._reload_timer = None
         reloader_log.info("Reloading…")
@@ -108,6 +117,7 @@ class Reloader:
         self._watchdog.start_process()
 
         self._observer = Observer()
+        self._observer.schedule(eh, project_path("darkwing"))
         self._observer.schedule(
             self._watchdog, str(project_path("darkwing")), recursive=True
         )
@@ -177,7 +187,7 @@ def get_args():
     arg_parser.add_argument(
         "--reload",
         action="store_true",
-        help="Auto-reload when code or static assets are modified.",
+        help="Auto-reload when code or config is modified.",
     )
     default_log = project_path("darkwing.log")
     arg_parser.add_argument(

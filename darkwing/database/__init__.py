@@ -17,21 +17,22 @@
 import multiprocessing
 import os
 
-import motor.motor_asyncio
-import motor.frameworks.asyncio
+from motor.motor_asyncio import AsyncIOMotorClient
 from trio_asyncio import TrioExecutor
 
 
-def connect_db(host: str) -> motor.motor_asyncio.AsyncIOMotorClient:
+def connect_db(host: str) -> AsyncIOMotorClient:
     _patch_motor()
-    return motor.motor_asyncio.AsyncIOMotorClient(host)
+    return AsyncIOMotorClient(host)
 
 
 def _patch_motor():
     """ A hack to work around motor incompatibility with trio_asyncio. """
+    import motor.frameworks.asyncio
+
     if "MOTOR_MAX_WORKERS" in os.environ:
         max_workers = int(os.environ["MOTOR_MAX_WORKERS"])
     else:
         max_workers = multiprocessing.cpu_count() * 5
 
-    motor.frameworks.asyncio._EXECUTOR = TrioExecutor(max_workers=max_workers)
+    motor.frameworks.asyncio._EXECUTOR = TrioExecutor()
