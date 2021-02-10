@@ -35,6 +35,10 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { HostsComponent } from './hosts/hosts.component';
 import { ScansComponent } from './scans/scans.component';
 import { UploadZoneComponent } from './upload-zone/upload-zone.component';
+import { TableComponent } from './scan/table/table.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
 
 @NgModule({
   declarations: [
@@ -44,6 +48,7 @@ import { UploadZoneComponent } from './upload-zone/upload-zone.component';
     MainNavComponent,
     ScansComponent,
     UploadZoneComponent,
+    TableComponent,
   ],
   imports: [
     AppRoutingModule,
@@ -59,6 +64,9 @@ import { UploadZoneComponent } from './upload-zone/upload-zone.component';
     MatSidenavModule,
     MatSliderModule,
     MatToolbarModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

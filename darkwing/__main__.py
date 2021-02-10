@@ -117,7 +117,6 @@ class Reloader:
         self._watchdog.start_process()
 
         self._observer = Observer()
-        self._observer.schedule(eh, project_path("darkwing"))
         self._observer.schedule(
             self._watchdog, str(project_path("darkwing")), recursive=True
         )

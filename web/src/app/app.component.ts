@@ -31,7 +31,5 @@ export class AppComponent {
   public async doStuff() {
     // TODO refactor the connection to the service
     await this.serverService.connect('ws://localhost:8080/ws/');
-    let result = await this.serverService.invoke('list_scans');
-    console.log('result ' + result);
   }
 }

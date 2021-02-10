@@ -11,15 +11,11 @@ export class ScansService {
    * @param logService
    * @param serverService
    */
-  constructor(
-    private log: LogService,
-    private serverService: ServerService) {
-
+  constructor(private log: LogService, private serverService: ServerService) {
   }
 
   /**
    * Upload scan files to the server.
-   *
    * @param files
    */
   public async uploadScans(files: FileList) {
@@ -32,5 +28,14 @@ export class ScansService {
       let fileData64 = btoa(String.fromCharCode(...new Uint8Array(fileData)));
       this.serverService.invoke('upload_scan', { 'base64_data': fileData64 });
     }
+  }
+
+  /**
+   * Fetch a page of scan data.
+   */
+  public async listScans(): Promise<Array<any>> {
+    let result = await this.serverService.invoke('list_scans');
+    this.log.info(`result ${result}`);
+    return result['scans'];
   }
 }

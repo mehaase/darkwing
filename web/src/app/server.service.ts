@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import { Injectable } from '@angular/core';
+import { connected } from 'process';
+import { Subject } from 'rxjs';
 import { LogService } from './log.service';
 
 type JsonRpcCommand = Record<string, any>;
@@ -27,6 +29,7 @@ export class ServerService {
   private ws?: WebSocket;
   private nextCommandId: number = 0;
   private pendingRequests: any = {};
+  private connectPromise?: Promise<void>;
 
   constructor(private log: LogService) { }
 
@@ -36,19 +39,42 @@ export class ServerService {
    * @param url WebSocket URL
    */
   public async connect(url: string): Promise<void> {
+    if (this.connectPromise) {
+      return this.connectPromise;
+    }
+
     this.log.info('Connecting to ' + url);
 
-    return new Promise((resolve, reject) => {
+    this.connectPromise = new Promise((resolve, reject) => {
       this.ws = new WebSocket(url);
-      this.ws.onopen = (_: Event) => {
+
+      this.ws.onopen = (_) => {
         this.ws!.onerror = this.handleWebSocketError;
         this.log.info('Connected.')
         resolve();
       };
+
+      this.ws.onmessage = (event: MessageEvent) => {
+        let reader = new FileReader();
+        reader.addEventListener('loadend', (_) => {
+          let result = reader.result;
+          if (typeof result === 'string') {
+            let message = JSON.parse(result);
+            let id: number = message['id'];
+            this.pendingRequests[id](message['result']);
+          } else {
+            throw new Error('WebSocket decoded blob is not a string.');
+          }
+        });
+        reader.readAsText(event.data);
+      };
+
       this.ws.onerror = function (event: Event) {
         reject(event);
       };
     });
+
+    return this.connectPromise;
   }
 
   /**
@@ -58,9 +84,7 @@ export class ServerService {
    * @param params
    */
   public async invoke(method: string, params?: JsonRpcArgs) {
-    if (this.ws === undefined) {
-      throw new Error("WebSocket is not connected.");
-    }
+    await this.connectPromise;
 
     let invocation: JsonRpcCommand = {
       'id': this.nextCommandId++,
@@ -74,7 +98,8 @@ export class ServerService {
 
     let request = JSON.stringify(invocation);
     let encoder = new TextEncoder();
-    this.ws.send(encoder.encode(request));
+    this.log.debug(`Invoke method=${method} id=${invocation['id']}`)
+    this.ws!.send(encoder.encode(request));
 
     return new Promise<JsonRpcResult>((resolve, reject) => {
       this.pendingRequests[invocation['id']] = (result: JsonRpcResult) => {
@@ -84,6 +109,6 @@ export class ServerService {
   }
 
   private handleWebSocketError(event: Event) {
-    this.log.info('error on websocket: ' + event);
+    this.log.info('Error on websocket: ' + event);
   }
 }
