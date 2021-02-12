@@ -14,37 +14,28 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatSortModule } from '@angular/material/sort';
-import { MatTableModule } from '@angular/material/table';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ScanTableComponent } from './table.component';
+import { ScanDetailComponent } from './detail.component';
 
-describe('TableComponent', () => {
-  let component: ScanTableComponent;
-  let fixture: ComponentFixture<ScanTableComponent>;
+describe('DetailComponent', () => {
+  let component: ScanDetailComponent;
+  let fixture: ComponentFixture<ScanDetailComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ScanTableComponent],
-      imports: [
-        NoopAnimationsModule,
-        MatPaginatorModule,
-        MatSortModule,
-        MatTableModule,
-      ]
-    }).compileComponents();
-  }));
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [ScanDetailComponent]
+    })
+      .compileComponents();
+  });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ScanTableComponent);
+    fixture = TestBed.createComponent(ScanDetailComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should compile', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

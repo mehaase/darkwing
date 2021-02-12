@@ -41,8 +41,16 @@ async def upload_scan(base64_data: str) -> dict:
 
 
 @dispatch.handler
-async def list_scans() -> dict:
-    return {"scans": await list_host_scans(dispatch.ctx.db)}
+async def list_scans(
+    page_index: int, page_size: int, sort_column: str, sort_asc: bool
+) -> dict:
+    scans, total = await list_host_scans(
+        dispatch.ctx.db, page_index, page_size, sort_column, sort_asc
+    )
+    return {
+        "scans": scans,
+        "total": total,
+    }
 
 
 @dispatch.handler

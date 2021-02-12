@@ -21,6 +21,7 @@ import typing
 import bson
 from motor.motor_asyncio import AsyncIOMotorClient
 from pymaybe import maybe
+import pymongo
 
 from ..model.host import Port
 from ..model.scan import HostScan
@@ -66,9 +67,21 @@ async def insert_host_scan(db: AsyncIOMotorClient, scan: HostScan) -> bson.Objec
 
 
 @aio_as_trio
-async def list_host_scans(db: AsyncIOMotorClient) -> list:
+async def list_host_scans(
+    db: AsyncIOMotorClient,
+    page_index: int,
+    page_size: int,
+    sort_column: str,
+    sort_asc: bool,
+) -> typing.Tuple[list, int]:
     """ List host scan documents. """
-    cursor = db.darkwing.scan.find()
+    skip = page_index * page_size
+    sort_dir = pymongo.ASCENDING if sort_asc else pymongo.DESCENDING
+    print(sort_column, sort_dir)
+    total = await db.darkwing.scan.count_documents({})
+    cursor = db.darkwing.scan.find(skip=skip, limit=page_size).sort(
+        [(sort_column, sort_dir)]
+    )
     scan_docs: typing.List[dict] = list()
     async for doc in cursor:
         scan_docs.append(
@@ -79,10 +92,11 @@ async def list_host_scans(db: AsyncIOMotorClient) -> list:
                 "command_line": doc["command_line"],
                 "started": maybe(doc["started"]).isoformat().or_else(None),
                 "completed": maybe(doc["completed"]).isoformat().or_else(None),
+                # TODO project host_count
                 "host_count": len(doc["hosts"]),
             }
         )
-    return scan_docs
+    return scan_docs, total
 
 
 @aio_as_trio

@@ -13,40 +13,19 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 import { CollectionViewer, DataSource } from '@angular/cdk/collections';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { SortDirection } from '@angular/material/sort';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { ScansService } from 'src/app/scans.service';
 
 export interface ScanInfo {
+    scan_id: string,
     scanner: string;
     command_line: string;
-    uploaded: Date;
+    started: Date;
     host_count: number;
 };
-
-const ELEMENT_DATA: ScanInfo[] = [
-    { scanner: 'nmap 7.8.0', command_line: 'nmap -oX test.xml 10.0.0.0/8', uploaded: new Date(), host_count: 10 },
-    { scanner: 'nmap 7.8.0', command_line: 'nmap -oX test.xml 10.0.0.0/8', uploaded: new Date(), host_count: 10 },
-    { scanner: 'nmap 7.8.0', command_line: 'nmap -oX test.xml 10.0.0.0/8', uploaded: new Date(), host_count: 10 },
-    { scanner: 'nmap 7.8.0', command_line: 'nmap -oX test.xml 10.0.0.0/8', uploaded: new Date(), host_count: 10 },
-    { scanner: 'nmap 7.8.0', command_line: 'nmap -oX test.xml 10.0.0.0/8', uploaded: new Date(), host_count: 10 },
-    { scanner: 'nmap 7.8.0', command_line: 'nmap -oX test.xml 10.0.0.0/8', uploaded: new Date(), host_count: 10 },
-    { scanner: 'nmap 7.8.0', command_line: 'nmap -oX test.xml 10.0.0.0/8', uploaded: new Date(), host_count: 10 },
-    { scanner: 'nmap 7.8.0', command_line: 'nmap -oX test.xml 10.0.0.0/8', uploaded: new Date(), host_count: 10 },
-    { scanner: 'nmap 7.8.0', command_line: 'nmap -oX test.xml 10.0.0.0/8', uploaded: new Date(), host_count: 10 },
-    { scanner: 'nmap 7.8.0', command_line: 'nmap -oX test.xml 10.0.0.0/8', uploaded: new Date(), host_count: 10 },
-    { scanner: 'nmap 7.8.0', command_line: 'nmap -oX test.xml 10.0.0.0/8', uploaded: new Date(), host_count: 10 },
-    { scanner: 'nmap 7.8.0', command_line: 'nmap -oX test.xml 10.0.0.0/8', uploaded: new Date(), host_count: 10 },
-    { scanner: 'nmap 7.8.0', command_line: 'nmap -oX test.xml 10.0.0.0/8', uploaded: new Date(), host_count: 10 },
-    { scanner: 'nmap 7.8.0', command_line: 'nmap -oX test.xml 10.0.0.0/8', uploaded: new Date(), host_count: 10 },
-    { scanner: 'nmap 7.8.0', command_line: 'nmap -oX test.xml 10.0.0.0/8', uploaded: new Date(), host_count: 10 },
-    { scanner: 'nmap 7.8.0', command_line: 'nmap -oX test.xml 10.0.0.0/8', uploaded: new Date(), host_count: 10 },
-    { scanner: 'nmap 7.8.0', command_line: 'nmap -oX test.xml 10.0.0.0/8', uploaded: new Date(), host_count: 10 },
-    { scanner: 'nmap 7.8.0', command_line: 'nmap -oX test.xml 10.0.0.0/8', uploaded: new Date(), host_count: 10 },
-    { scanner: 'nmap 7.8.0', command_line: 'nmap -oX test.xml 10.0.0.0/8', uploaded: new Date(), host_count: 10 },
-];
 
 /**
  * Data source for the Table view. This class should
@@ -58,6 +37,7 @@ export class ScanDataSource extends DataSource<ScanInfo> {
     private loadingSubject = new BehaviorSubject<boolean>(false);
 
     public loading$ = this.loadingSubject.asObservable();
+    public totalCount = 0;
 
     /**
      * Constructor
@@ -67,22 +47,25 @@ export class ScanDataSource extends DataSource<ScanInfo> {
         super();
     }
 
-    connect(collectionViewer: CollectionViewer): Observable<ScanInfo[]> {
+    connect(_: CollectionViewer): Observable<ScanInfo[]> {
         return this.scansSubject.asObservable();
     }
 
-    disconnect(collectionViewer: CollectionViewer): void {
+    disconnect(_: CollectionViewer): void {
         this.scansSubject.complete();
         this.loadingSubject.complete();
     }
 
-    public async loadScans(/*sortDirection: string, pageIndex: number, pageSize: number*/) {
+    public async loadScans(pageIndex: number, pageSize: number, sortColumn: string,
+        sortDirection: SortDirection) {
         this.loadingSubject.next(true);
         try {
-            let scans = await this.scansService.listScans();
-            this.scansSubject.next(scans);
+            let result = await this.scansService.listScans(pageIndex, pageSize,
+                sortColumn, sortDirection);
+            this.totalCount = result.total;
+            this.scansSubject.next(result.scans);
         }
-        catch (Exception) {
+        finally {
             this.loadingSubject.next(false);
         }
     }

@@ -17,28 +17,31 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CommonModule } from '@angular/common';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { LayoutModule } from '@angular/cdk/layout';
-import { MainNavComponent } from './main-nav/main-nav.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSliderModule } from '@angular/material/slider';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
+import { AppComponent } from './app.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { HostsComponent } from './hosts/hosts.component';
+import { MainNavComponent } from './main-nav/main-nav.component';
 import { ScansComponent } from './scans/scans.component';
+import { ScanTableComponent } from './scan/table/table.component';
 import { UploadZoneComponent } from './upload-zone/upload-zone.component';
-import { TableComponent } from './scan/table/table.component';
-import { MatTableModule } from '@angular/material/table';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatSortModule } from '@angular/material/sort';
+import { ScanDetailComponent } from './scan/detail/detail.component';
 
 @NgModule({
   declarations: [
@@ -47,8 +50,9 @@ import { MatSortModule } from '@angular/material/sort';
     HostsComponent,
     MainNavComponent,
     ScansComponent,
+    ScanDetailComponent,
+    ScanTableComponent,
     UploadZoneComponent,
-    TableComponent,
   ],
   imports: [
     AppRoutingModule,
@@ -61,12 +65,13 @@ import { MatSortModule } from '@angular/material/sort';
     MatGridListModule,
     MatListModule,
     MatMenuModule,
+    MatPaginatorModule,
+    MatProgressSpinnerModule,
     MatSidenavModule,
     MatSliderModule,
+    MatSortModule,
     MatToolbarModule,
     MatTableModule,
-    MatPaginatorModule,
-    MatSortModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

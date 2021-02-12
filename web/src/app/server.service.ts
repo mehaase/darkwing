@@ -14,8 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import { Injectable } from '@angular/core';
-import { connected } from 'process';
-import { Subject } from 'rxjs';
 import { LogService } from './log.service';
 
 type JsonRpcCommand = Record<string, any>;
@@ -61,6 +59,7 @@ export class ServerService {
           if (typeof result === 'string') {
             let message = JSON.parse(result);
             let id: number = message['id'];
+            this.log.debug(`Invoke id=${id} -> returned`)
             this.pendingRequests[id](message['result']);
           } else {
             throw new Error('WebSocket decoded blob is not a string.');
@@ -98,7 +97,7 @@ export class ServerService {
 
     let request = JSON.stringify(invocation);
     let encoder = new TextEncoder();
-    this.log.debug(`Invoke method=${method} id=${invocation['id']}`)
+    this.log.debug(`Invoke id=${invocation['id']} method=${method}`)
     this.ws!.send(encoder.encode(request));
 
     return new Promise<JsonRpcResult>((resolve, reject) => {

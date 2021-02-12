@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { SortDirection } from '@angular/material/sort';
 import { LogService } from './log.service';
 import { ServerService } from './server.service';
 
@@ -30,12 +31,17 @@ export class ScansService {
     }
   }
 
+  public async getScan(id: string): Promise<Record<string, any>> {
+    return await this.serverService.invoke('get_scan', [id]);
+  }
+
   /**
    * Fetch a page of scan data.
    */
-  public async listScans(): Promise<Array<any>> {
-    let result = await this.serverService.invoke('list_scans');
-    this.log.info(`result ${result}`);
-    return result['scans'];
+  public async listScans(pageIndex: number, pageSize: number, sortColumn: string,
+    sortDirection: SortDirection): Promise<Record<string, any>> {
+    let result = await this.serverService.invoke('list_scans', [pageIndex, pageSize,
+      sortColumn, sortDirection == "asc"]);
+    return result;
   }
 }

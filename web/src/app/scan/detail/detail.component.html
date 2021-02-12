@@ -1,0 +1,14 @@
+<h1>
+    Scan Detail
+</h1>
+<div *ngIf='scan == undefined'>Loading...</div>
+<div *ngIf='scan != undefined'>
+    <ul>
+        <li>ID {{scan.scan_id}}</li>
+        <li>Scanner {{scan.scanner}} {{scan.scanner_version}}</li>
+        <li>Command line {{scan.command_line}}</li>
+        <li>Started {{scan.started}}</li>
+        <li>Completed {{scan.completed}}</li>
+        <li>Host count {{scan.host_count}}</li>
+    </ul>
+</div>

@@ -13,22 +13,25 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
-import { Component, OnInit, ViewChild } from '@angular/core';
+
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSpinner } from '@angular/material/progress-spinner';
 import { MatSort } from '@angular/material/sort';
 import { ScansService } from 'src/app/scans.service';
 import { ScanDataSource } from './table-datasource';
 
 @Component({
-    selector: 'app-table',
+    selector: 'scan-table',
     templateUrl: './table.component.html',
     styleUrls: ['./table.component.scss']
 })
-export class TableComponent implements OnInit {
-    displayedColumns: string[] = ['scanner', 'command_line', 'uploaded', 'host_count'];
+export class ScanTableComponent implements AfterViewInit {
+    displayedColumns: string[] = ['scanner', 'command_line', 'started', 'host_count'];
     dataSource: ScanDataSource;
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
+    @ViewChild(MatSpinner) spinner!: MatSpinner;
     @ViewChild(MatSort) sort!: MatSort;
 
     /**
@@ -39,7 +42,20 @@ export class TableComponent implements OnInit {
         this.dataSource = new ScanDataSource(scansService);
     }
 
-    ngOnInit() {
-        this.dataSource.loadScans();
+    ngAfterViewInit() {
+        this.paginator.page
+            .subscribe((_: any) => { this.refreshData() });
+        this.sort.sortChange
+            .subscribe((_: any) => { this.refreshData() });
+        setTimeout(() => this.refreshData());
+    }
+
+    private refreshData() {
+        this.dataSource.loadScans(
+            this.paginator.pageIndex,
+            this.paginator.pageSize,
+            this.sort.active,
+            this.sort.direction
+        );
     }
 }

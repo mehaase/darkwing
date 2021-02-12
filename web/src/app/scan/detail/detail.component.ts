@@ -13,18 +13,29 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
-import { Component } from '@angular/core';
-import { ServerService } from './server.service';
+
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { ScansService } from 'src/app/scans.service';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  selector: 'scan-detail',
+  templateUrl: './detail.component.html',
+  styleUrls: ['./detail.component.scss']
 })
-export class AppComponent {
-  title = 'Darkwing';
+export class ScanDetailComponent implements OnInit {
+  public scan?: Record<string, any>;
 
-  constructor(private serverService: ServerService) {
-    this.serverService.connect('ws://localhost:8080/ws/');
+  constructor(private route: ActivatedRoute, private scansService: ScansService) { }
+
+  ngOnInit(): void {
+    this.load();
+  }
+
+  private async load() {
+    let id: string | null = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.scan = await this.scansService.getScan(id);
+    }
   }
 }

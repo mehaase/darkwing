@@ -17,14 +17,15 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { HostsComponent } from './hosts/hosts.component';
-// import { ScansComponent } from './scans/scans.component';
-import { TableComponent as ScanTableComponent } from './scan/table/table.component';
+import { ScanDetailComponent } from './scan/detail/detail.component';
+import { ScanTableComponent } from './scan/table/table.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'hosts', component: HostsComponent },
-  { path: 'scans', component: ScanTableComponent },
+  { path: 'scan/:id', component: ScanDetailComponent },
+  { path: 'scan', component: ScanTableComponent },
 ];
 
 @NgModule({
