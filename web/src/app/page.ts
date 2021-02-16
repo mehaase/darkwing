@@ -22,7 +22,7 @@ export class PageRequest {
     /**
      * Return an object that can be sent to the server.
      */
-    public toJson() {
+    public toJson(): Record<string, any> {
         return {
             'page_number': this.pageNumber,
             'items_per_page': this.itemsPerPage,

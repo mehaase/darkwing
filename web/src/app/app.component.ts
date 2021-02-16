@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import { Component } from '@angular/core';
+import { LogLevel, LogService } from './log.service';
 import { ServerService } from './server.service';
 
 @Component({
@@ -24,7 +25,8 @@ import { ServerService } from './server.service';
 export class AppComponent {
   title = 'Darkwing';
 
-  constructor(private serverService: ServerService) {
+  constructor(private serverService: ServerService, private logService: LogService) {
+    this.logService.setLevel(LogLevel.Debug);
     this.serverService.connect('ws://localhost:8080/ws/');
   }
 }

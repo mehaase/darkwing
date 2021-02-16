@@ -59,7 +59,7 @@ export class ServerService {
           if (typeof result === 'string') {
             let message = JSON.parse(result);
             let id: number = message['id'];
-            this.log.debug(`Invoke id=${id} -> returned`)
+            this.log.debug(`Command #${id} -> returned`)
             this.pendingRequests[id](message['result']);
           } else {
             throw new Error('WebSocket decoded blob is not a string.');
@@ -97,7 +97,10 @@ export class ServerService {
 
     let request = JSON.stringify(invocation);
     let encoder = new TextEncoder();
-    this.log.debug(`Invoke id=${invocation['id']} method=${method}`)
+    if (this.log.debugEnabled()) {
+      let signature = `${method}()`;
+      this.log.debug(`Command #${invocation["id"]} ${signature}`)
+    }
     this.ws!.send(encoder.encode(request));
 
     return new Promise<JsonRpcResult>((resolve, reject) => {

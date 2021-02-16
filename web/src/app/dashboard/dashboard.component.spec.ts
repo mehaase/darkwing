@@ -32,7 +32,6 @@ describe('DashboardComponent', () => {
       declarations: [DashboardComponent],
       imports: [
         NoopAnimationsModule,
-        LayoutModule,
         MatButtonModule,
         MatCardModule,
         MatGridListModule,

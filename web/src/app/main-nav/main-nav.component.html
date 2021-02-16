@@ -7,9 +7,18 @@
       <span>Menu</span>
     </mat-toolbar>
     <mat-nav-list>
-      <a mat-list-item routerLink='/dashboard' routerLinkActive='TODO'>Dashboard</a>
-      <a mat-list-item routerLink='/hosts' routerLinkActive='TODO'>Hosts</a>
-      <a mat-list-item routerLink='/scan' routerLinkActive='TODO'>Scans</a>
+      <a mat-list-item routerLink='/dashboard' routerLinkActive='is-active'>
+        <mat-icon aria-hidden="false" aria-label="Dashboard">dashboard</mat-icon>
+        <span class='menu-item'>Dashboard</span>
+      </a>
+      <a mat-list-item routerLink='/hosts' routerLinkActive='is-active'>
+        <mat-icon aria-hidden="false" aria-label="Hosts">storage</mat-icon>
+        <span class='menu-item'>Hosts</span>
+      </a>
+      <a mat-list-item routerLink='/scan' routerLinkActive='is-active'>
+        <mat-icon aria-hidden="false" aria-label="Scans">radar</mat-icon>
+        <span class='menu-item'>Scans</span>
+      </a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>

@@ -15,3 +15,12 @@
   top: 0;
   z-index: 1;
 }
+
+mat-icon + span.menu-item {
+  margin-top: 1px;
+  margin-left: 0.5em;
+}
+
+.is-active {
+  background-color: #616060;
+}

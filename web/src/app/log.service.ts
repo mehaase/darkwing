@@ -15,6 +15,13 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import { Injectable } from '@angular/core';
 
+export enum LogLevel {
+  Error = 0,
+  Warn,
+  Info,
+  Debug,
+}
+
 /**
  * A very simplistic logging service. To be improved later.
  */
@@ -22,24 +29,42 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class LogService {
+  private level: LogLevel;
+
+  constructor() {
+    this.level = LogLevel.Error;
+  }
+
   error(msg: any) {
-    this.log('ERROR', msg);
+    this.log(LogLevel.Error, msg);
   }
 
   warn(msg: any) {
-    this.log('WARN ', msg);
+    this.log(LogLevel.Warn, msg);
   }
 
   info(msg: any) {
-    this.log('INFO ', msg);
+    this.log(LogLevel.Info, msg);
   }
 
   debug(msg: any) {
-    this.log('DEBUG', msg);
+    this.log(LogLevel.Debug, msg);
   }
 
-  private log(level: string, msg: string) {
-    console.log(this.timestamp() + ' [' + level + '] ' + msg);
+  setLevel(level: LogLevel) {
+    this.level = level;
+  }
+
+  debugEnabled(): boolean {
+    return this.level >= LogLevel.Debug;
+  }
+
+  private log(level: LogLevel, msg: string) {
+    if (level <= this.level) {
+      let levelName = LogLevel[level];
+      let ts = this.timestamp();
+      console.log(`${ts} [${levelName}] ${msg}`);
+    }
   }
 
   private timestamp(): string {
