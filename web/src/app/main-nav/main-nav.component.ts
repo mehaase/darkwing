@@ -24,19 +24,19 @@ import { faBars } from '@fortawesome/free-solid-svg-icons';
  * The side navigation.
  */
 @Component({
-  selector: 'app-main-nav',
-  templateUrl: './main-nav.component.html',
-  styleUrls: ['./main-nav.component.scss']
+    selector: 'app-main-nav',
+    templateUrl: './main-nav.component.html',
+    styleUrls: ['./main-nav.component.scss']
 })
 export class MainNavComponent {
-  faBars = faBars;
+    faBars = faBars;
 
-  isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
-    .pipe(
-      map(result => result.matches),
-      shareReplay()
-    );
+    isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
+        .pipe(
+            map(result => result.matches),
+            shareReplay()
+        );
 
-  constructor(private breakpointObserver: BreakpointObserver) { }
+    constructor(private breakpointObserver: BreakpointObserver) { }
 
 }

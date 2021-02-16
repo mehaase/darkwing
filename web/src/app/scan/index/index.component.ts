@@ -21,27 +21,27 @@ import { ScanTableComponent } from '../table/table.component';
  * Display scan data and allow the user to submit scan data.
  */
 @Component({
-  selector: 'scan-index',
-  templateUrl: './index.component.html',
-  styleUrls: ['./index.component.scss']
+    selector: 'scan-index',
+    templateUrl: './index.component.html',
+    styleUrls: ['./index.component.scss']
 })
 export class ScanIndexComponent {
-  @ViewChild(ScanTableComponent) table!: ScanTableComponent;
+    @ViewChild(ScanTableComponent) table!: ScanTableComponent;
 
-  /**
-   * Constructor
-   *
-   * @param service
-   */
-  constructor(private service: ScansService) { }
+    /**
+     * Constructor
+     *
+     * @param service
+     */
+    constructor(private service: ScansService) { }
 
-  /**
-   * Upload scans to the server.
-   *
-   * @param files A list of scans to upload
-   */
-  public async uploadFiles(files: FileList) {
-    await this.service.uploadScans(files);
-    this.table.refresh();
-  }
+    /**
+     * Upload scans to the server.
+     *
+     * @param files A list of scans to upload
+     */
+    public async uploadFiles(files: FileList) {
+        await this.service.uploadScans(files);
+        this.table.refresh();
+    }
 }

@@ -23,28 +23,28 @@ import { MatTableModule } from '@angular/material/table';
 import { ScanTableComponent } from './table.component';
 
 describe('TableComponent', () => {
-  let component: ScanTableComponent;
-  let fixture: ComponentFixture<ScanTableComponent>;
+    let component: ScanTableComponent;
+    let fixture: ComponentFixture<ScanTableComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ScanTableComponent],
-      imports: [
-        NoopAnimationsModule,
-        MatPaginatorModule,
-        MatSortModule,
-        MatTableModule,
-      ]
-    }).compileComponents();
-  }));
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            declarations: [ScanTableComponent],
+            imports: [
+                NoopAnimationsModule,
+                MatPaginatorModule,
+                MatSortModule,
+                MatTableModule,
+            ]
+        }).compileComponents();
+    }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ScanTableComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    beforeEach(() => {
+        fixture = TestBed.createComponent(ScanTableComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it('should compile', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should compile', () => {
+        expect(component).toBeTruthy();
+    });
 });

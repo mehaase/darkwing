@@ -21,15 +21,15 @@ import { Component, OnInit } from '@angular/core';
  * THIS IS CURRENTLY EMPTY.
  */
 @Component({
-  selector: 'app-hosts',
-  templateUrl: './hosts.component.html',
-  styleUrls: ['./hosts.component.scss']
+    selector: 'app-hosts',
+    templateUrl: './hosts.component.html',
+    styleUrls: ['./hosts.component.scss']
 })
 export class HostsComponent implements OnInit {
 
-  constructor() { }
+    constructor() { }
 
-  ngOnInit(): void {
-  }
+    ngOnInit(): void {
+    }
 
 }

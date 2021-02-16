@@ -19,23 +19,23 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ScanDetailComponent } from './detail.component';
 
 describe('DetailComponent', () => {
-  let component: ScanDetailComponent;
-  let fixture: ComponentFixture<ScanDetailComponent>;
+    let component: ScanDetailComponent;
+    let fixture: ComponentFixture<ScanDetailComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ScanDetailComponent]
-    })
-      .compileComponents();
-  });
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            declarations: [ScanDetailComponent]
+        })
+            .compileComponents();
+    });
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ScanDetailComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    beforeEach(() => {
+        fixture = TestBed.createComponent(ScanDetailComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });

@@ -16,70 +16,70 @@
 import { Injectable } from '@angular/core';
 
 export enum LogLevel {
-  Error = 0,
-  Warn,
-  Info,
-  Debug,
+    Error = 0,
+    Warn,
+    Info,
+    Debug,
 }
 
 /**
  * A very simplistic logging service. To be improved later.
  */
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class LogService {
-  private level: LogLevel;
+    private level: LogLevel;
 
-  constructor() {
-    this.level = LogLevel.Error;
-  }
-
-  error(msg: any) {
-    this.log(LogLevel.Error, msg);
-  }
-
-  warn(msg: any) {
-    this.log(LogLevel.Warn, msg);
-  }
-
-  info(msg: any) {
-    this.log(LogLevel.Info, msg);
-  }
-
-  debug(msg: any) {
-    this.log(LogLevel.Debug, msg);
-  }
-
-  setLevel(level: LogLevel) {
-    this.level = level;
-  }
-
-  debugEnabled(): boolean {
-    return this.level >= LogLevel.Debug;
-  }
-
-  private log(level: LogLevel, msg: string) {
-    if (level <= this.level) {
-      let levelName = LogLevel[level];
-      let ts = this.timestamp();
-      console.log(`${ts} [${levelName}] ${msg}`);
+    constructor() {
+        this.level = LogLevel.Error;
     }
-  }
 
-  private timestamp(): string {
-    let now = new Date();
-    return this.pad(now.getHours(), 2) + ':' +
-      this.pad(now.getMinutes(), 2) + ':' +
-      this.pad(now.getSeconds(), 2) + '.' +
-      this.pad(now.getMilliseconds(), 3);
-  }
-
-  private pad(num: number, length: number): string {
-    let s = num + '';
-    while (s.length < length) {
-      s = '0' + s;
+    error(msg: any) {
+        this.log(LogLevel.Error, msg);
     }
-    return s;
-  }
+
+    warn(msg: any) {
+        this.log(LogLevel.Warn, msg);
+    }
+
+    info(msg: any) {
+        this.log(LogLevel.Info, msg);
+    }
+
+    debug(msg: any) {
+        this.log(LogLevel.Debug, msg);
+    }
+
+    setLevel(level: LogLevel) {
+        this.level = level;
+    }
+
+    debugEnabled(): boolean {
+        return this.level >= LogLevel.Debug;
+    }
+
+    private log(level: LogLevel, msg: string) {
+        if (level <= this.level) {
+            let levelName = LogLevel[level];
+            let ts = this.timestamp();
+            console.log(`${ts} [${levelName}] ${msg}`);
+        }
+    }
+
+    private timestamp(): string {
+        let now = new Date();
+        return this.pad(now.getHours(), 2) + ':' +
+            this.pad(now.getMinutes(), 2) + ':' +
+            this.pad(now.getSeconds(), 2) + '.' +
+            this.pad(now.getMilliseconds(), 3);
+    }
+
+    private pad(num: number, length: number): string {
+        let s = num + '';
+        while (s.length < length) {
+            s = '0' + s;
+        }
+        return s;
+    }
 }

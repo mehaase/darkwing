@@ -21,15 +21,15 @@ import { ScanDetailComponent } from './scan/detail/detail.component';
 import { ScanIndexComponent } from './scan/index/index.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-  { path: 'dashboard', component: DashboardComponent },
-  { path: 'hosts', component: HostsComponent },
-  { path: 'scan/:id', component: ScanDetailComponent },
-  { path: 'scan', component: ScanIndexComponent },
+    { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+    { path: 'dashboard', component: DashboardComponent },
+    { path: 'hosts', component: HostsComponent },
+    { path: 'scan/:id', component: ScanDetailComponent },
+    { path: 'scan', component: ScanIndexComponent },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+    imports: [RouterModule.forRoot(routes)],
+    exports: [RouterModule]
 })
 export class AppRoutingModule { }

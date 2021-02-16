@@ -19,23 +19,23 @@ import { ActivatedRoute } from '@angular/router';
 import { ScansService } from 'src/app/scans.service';
 
 @Component({
-  selector: 'scan-detail',
-  templateUrl: './detail.component.html',
-  styleUrls: ['./detail.component.scss']
+    selector: 'scan-detail',
+    templateUrl: './detail.component.html',
+    styleUrls: ['./detail.component.scss']
 })
 export class ScanDetailComponent implements OnInit {
-  public scan?: Record<string, any>;
+    public scan?: Record<string, any>;
 
-  constructor(private route: ActivatedRoute, private scansService: ScansService) { }
+    constructor(private route: ActivatedRoute, private scansService: ScansService) { }
 
-  ngOnInit(): void {
-    this.load();
-  }
-
-  private async load() {
-    let id: string | null = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.scan = await this.scansService.getScan(id);
+    ngOnInit(): void {
+        this.load();
     }
-  }
+
+    private async load() {
+        let id: string | null = this.route.snapshot.paramMap.get('id');
+        if (id) {
+            this.scan = await this.scansService.getScan(id);
+        }
+    }
 }

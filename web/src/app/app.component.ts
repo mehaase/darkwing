@@ -18,15 +18,15 @@ import { LogLevel, LogService } from './log.service';
 import { ServerService } from './server.service';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'Darkwing';
+    title = 'Darkwing';
 
-  constructor(private serverService: ServerService, private logService: LogService) {
-    this.logService.setLevel(LogLevel.Debug);
-    this.serverService.connect('ws://localhost:8080/ws/');
-  }
+    constructor(private serverService: ServerService, private logService: LogService) {
+        this.logService.setLevel(LogLevel.Debug);
+        this.serverService.connect('ws://localhost:8080/ws/');
+    }
 }
