@@ -15,25 +15,17 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import { CollectionViewer, DataSource } from '@angular/cdk/collections';
-import { SortDirection } from '@angular/material/sort';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { ScansService } from 'src/app/scans.service';
-
-export interface ScanInfo {
-    scan_id: string,
-    scanner: string;
-    command_line: string;
-    started: Date;
-    host_count: number;
-};
+import { ScanListItem, ScansService } from 'src/app/scans.service';
+import { PageRequest } from '../../page';
 
 /**
  * Data source for the Table view. This class should
  * encapsulate all logic for fetching and manipulating the displayed data
  * (including sorting, pagination, and filtering).
  */
-export class ScanDataSource extends DataSource<ScanInfo> {
-    private scansSubject = new BehaviorSubject<ScanInfo[]>([]);
+export class ScanDataSource extends DataSource<ScanListItem> {
+    private scansSubject = new BehaviorSubject<ScanListItem[]>([]);
     private loadingSubject = new BehaviorSubject<boolean>(false);
 
     public loading$ = this.loadingSubject.asObservable();
@@ -47,7 +39,7 @@ export class ScanDataSource extends DataSource<ScanInfo> {
         super();
     }
 
-    connect(_: CollectionViewer): Observable<ScanInfo[]> {
+    connect(_: CollectionViewer): Observable<ScanListItem[]> {
         return this.scansSubject.asObservable();
     }
 
@@ -56,14 +48,12 @@ export class ScanDataSource extends DataSource<ScanInfo> {
         this.loadingSubject.complete();
     }
 
-    public async loadScans(pageIndex: number, pageSize: number, sortColumn: string,
-        sortDirection: SortDirection) {
+    public async loadScans(page: PageRequest) {
         this.loadingSubject.next(true);
         try {
-            let result = await this.scansService.listScans(pageIndex, pageSize,
-                sortColumn, sortDirection);
-            this.totalCount = result.total;
-            this.scansSubject.next(result.scans);
+            let result = await this.scansService.listScans(page);
+            this.totalCount = result.totalCount;
+            this.scansSubject.next(result.items);
         }
         finally {
             this.loadingSubject.next(false);

@@ -17,15 +17,18 @@
 from __future__ import annotations
 from base64 import b64decode
 from datetime import datetime
+from dataclasses import dataclass
 from ipaddress import IPv4Address, IPv6Address
 import logging
 import typing
 
 from lxml import etree
+from pymaybe import maybe
 import trio
 
 from . import dispatch
 from ..database.scan import get_host_scan, insert_host_scan, list_host_scans
+from ..model.page import PageRequest, PageResult
 from ..nmap.loader import load_scan
 
 
@@ -41,16 +44,20 @@ async def upload_scan(base64_data: str) -> dict:
 
 
 @dispatch.handler
-async def list_scans(
-    page_index: int, page_size: int, sort_column: str, sort_asc: bool
-) -> dict:
-    scans, total = await list_host_scans(
-        dispatch.ctx.db, page_index, page_size, sort_column, sort_asc
-    )
-    return {
-        "scans": scans,
-        "total": total,
-    }
+async def list_scans(page: dict) -> dict:
+    def jsonify_scan(scan):
+        return {
+            "scan_id": scan.scan_id,
+            "scanner": scan.scanner,
+            "scanner_version": scan.scanner_version,
+            "command_line": scan.command_line,
+            "started": maybe(scan.started).isoformat().or_else(None),
+            "completed": maybe(scan.completed).isoformat().or_else(None),
+            "host_count": scan.host_count,
+        }
+
+    result = await list_host_scans(dispatch.ctx.db, PageRequest.from_json(page))
+    return result.serialize(jsonify_scan)
 
 
 @dispatch.handler

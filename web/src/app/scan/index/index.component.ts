@@ -13,18 +13,21 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
-import { Component, OnInit } from '@angular/core';
-import { ScansService } from '../scans.service';
+import { Component, ViewChild } from '@angular/core';
+import { ScansService } from '../../scans.service';
+import { ScanTableComponent } from '../table/table.component';
 
 /**
  * Display scan data and allow the user to submit scan data.
  */
 @Component({
-  selector: 'app-scans',
-  templateUrl: './scans.component.html',
-  styleUrls: ['./scans.component.scss']
+  selector: 'scan-index',
+  templateUrl: './index.component.html',
+  styleUrls: ['./index.component.scss']
 })
-export class ScansComponent {
+export class ScanIndexComponent {
+  @ViewChild(ScanTableComponent) table!: ScanTableComponent;
+
   /**
    * Constructor
    *
@@ -39,5 +42,6 @@ export class ScansComponent {
    */
   public async uploadFiles(files: FileList) {
     await this.service.uploadScans(files);
+    this.table.refresh();
   }
 }

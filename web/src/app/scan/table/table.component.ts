@@ -20,6 +20,7 @@ import { MatSpinner } from '@angular/material/progress-spinner';
 import { MatSort } from '@angular/material/sort';
 import { ScansService } from 'src/app/scans.service';
 import { ScanDataSource } from './table-datasource';
+import { PageRequest } from '../../page';
 
 @Component({
     selector: 'scan-table',
@@ -42,6 +43,10 @@ export class ScanTableComponent implements AfterViewInit {
         this.dataSource = new ScanDataSource(scansService);
     }
 
+    public refresh() {
+        this.refreshData();
+    }
+
     ngAfterViewInit() {
         this.paginator.page
             .subscribe((_: any) => { this.refreshData() });
@@ -51,11 +56,12 @@ export class ScanTableComponent implements AfterViewInit {
     }
 
     private refreshData() {
-        this.dataSource.loadScans(
+        let page = new PageRequest(
             this.paginator.pageIndex,
             this.paginator.pageSize,
             this.sort.active,
             this.sort.direction
         );
+        this.dataSource.loadScans(page);
     }
 }

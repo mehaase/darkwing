@@ -18,7 +18,6 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { LayoutModule } from '@angular/cdk/layout';
 import { MatButtonModule } from '@angular/material/button';
@@ -38,10 +37,10 @@ import { AppComponent } from './app.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { HostsComponent } from './hosts/hosts.component';
 import { MainNavComponent } from './main-nav/main-nav.component';
-import { ScansComponent } from './scans/scans.component';
+import { ScanIndexComponent } from './scan/index/index.component';
+import { ScanDetailComponent } from './scan/detail/detail.component';
 import { ScanTableComponent } from './scan/table/table.component';
 import { UploadZoneComponent } from './upload-zone/upload-zone.component';
-import { ScanDetailComponent } from './scan/detail/detail.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +48,7 @@ import { ScanDetailComponent } from './scan/detail/detail.component';
     DashboardComponent,
     HostsComponent,
     MainNavComponent,
-    ScansComponent,
+    ScanIndexComponent,
     ScanDetailComponent,
     ScanTableComponent,
     UploadZoneComponent,

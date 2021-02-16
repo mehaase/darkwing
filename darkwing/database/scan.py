@@ -15,6 +15,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from __future__ import annotations
+from dataclasses import dataclass
+from datetime import datetime
 from trio_asyncio import aio_as_trio
 import typing
 
@@ -25,6 +27,7 @@ import pymongo
 
 from ..model.host import Port
 from ..model.scan import HostScan
+from ..model.page import PageRequest, PageResult
 
 
 @aio_as_trio
@@ -66,37 +69,43 @@ async def insert_host_scan(db: AsyncIOMotorClient, scan: HostScan) -> bson.Objec
     return str(scan_id)
 
 
-@aio_as_trio
-async def list_host_scans(
-    db: AsyncIOMotorClient,
-    page_index: int,
-    page_size: int,
-    sort_column: str,
-    sort_asc: bool,
-) -> typing.Tuple[list, int]:
-    """ List host scan documents. """
-    skip = page_index * page_size
-    sort_dir = pymongo.ASCENDING if sort_asc else pymongo.DESCENDING
-    print(sort_column, sort_dir)
-    total = await db.darkwing.scan.count_documents({})
-    cursor = db.darkwing.scan.find(skip=skip, limit=page_size).sort(
-        [(sort_column, sort_dir)]
-    )
-    scan_docs: typing.List[dict] = list()
-    async for doc in cursor:
-        scan_docs.append(
-            {
-                "scan_id": str(doc["_id"]),
-                "scanner": doc["scanner"],
-                "scanner_version": doc["scanner_version"],
-                "command_line": doc["command_line"],
-                "started": maybe(doc["started"]).isoformat().or_else(None),
-                "completed": maybe(doc["completed"]).isoformat().or_else(None),
-                # TODO project host_count
-                "host_count": len(doc["hosts"]),
-            }
+@dataclass
+class ScanListItem:
+    scan_id: str
+    scanner: str
+    scanner_version: str
+    command_line: str
+    started: typing.Optional[datetime]
+    completed: typing.Optional[datetime]
+    host_count: int
+
+    @staticmethod
+    def from_db(doc):
+        return ScanListItem(
+            str(doc["_id"]),
+            doc["scanner"],
+            doc["scanner_version"],
+            doc["command_line"],
+            doc["started"],
+            doc["completed"],
+            # TODO project host_count
+            len(doc["hosts"]),
         )
-    return scan_docs, total
+
+
+@aio_as_trio
+async def list_host_scans(db: AsyncIOMotorClient, page: PageRequest) -> PageResult:
+    """ List host scan documents. """
+    skip = page.page_number * page.items_per_page
+    sort_dir = pymongo.ASCENDING if page.sort_ascending else pymongo.DESCENDING
+    total = await db.darkwing.scan.count_documents({})
+    cursor = db.darkwing.scan.find(skip=skip, limit=page.items_per_page).sort(
+        [(page.sort_column, sort_dir)]
+    )
+    scans: typing.List[ScanListItem] = list()
+    async for doc in cursor:
+        scans.append(ScanListItem.from_db(doc))
+    return PageResult(total, scans)
 
 
 @aio_as_trio

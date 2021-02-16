@@ -2,8 +2,9 @@
 
 :host {
     display: block;
+    margin: 1em 0;
     border: 2px dotted mat-color($primary);
-    padding: 20px;
+    padding: 0.5em;
 
     &.file-over {
         border-style: solid;

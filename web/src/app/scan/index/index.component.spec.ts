@@ -15,21 +15,21 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ScansComponent } from './scans.component';
+import { ScanIndexComponent } from './index.component';
 
 describe('ScansComponent', () => {
-  let component: ScansComponent;
-  let fixture: ComponentFixture<ScansComponent>;
+  let component: ScanIndexComponent;
+  let fixture: ComponentFixture<ScanIndexComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ScansComponent]
+      declarations: [ScanIndexComponent]
     })
       .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ScansComponent);
+    fixture = TestBed.createComponent(ScanIndexComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

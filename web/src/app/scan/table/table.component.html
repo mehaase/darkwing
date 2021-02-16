@@ -12,7 +12,7 @@
 
   <ng-container matColumnDef='command_line'>
     <th mat-header-cell *matHeaderCellDef> Command Line </th>
-    <td mat-cell *matCellDef='let element'> {{element.command_line}} </td>
+    <td mat-cell *matCellDef='let element'> {{element.commandLine}} </td>
   </ng-container>
 
   <ng-container matColumnDef='started'>
@@ -22,13 +22,13 @@
 
   <ng-container matColumnDef='host_count'>
     <th mat-header-cell *matHeaderCellDef> # Hosts </th>
-    <td mat-cell *matCellDef='let element'> {{element.host_count}} </td>
+    <td mat-cell *matCellDef='let element'> {{element.hostCount}} </td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef='displayedColumns'></tr>
   <tr mat-row
       *matRowDef='let row; columns: displayedColumns;'
-      [routerLink]='"/scan/" + row.scan_id'></tr>
+      [routerLink]='"/scan/" + row.scanId'></tr>
 </table>
 
 <mat-paginator

@@ -1,7 +1,29 @@
 import { Injectable } from '@angular/core';
-import { SortDirection } from '@angular/material/sort';
 import { LogService } from './log.service';
+import { PageRequest, PageResult } from './page';
 import { ServerService } from './server.service';
+
+export class ScanListItem {
+  private constructor(
+    private scanId: string,
+    private scanner: string,
+    private commandLine: string,
+    private started: Date,
+    private hostCount: number,
+  ) {
+
+  }
+
+  public static fromJson(json: Record<string, any>) {
+    return new ScanListItem(
+      json['scan_id'],
+      json['scanner'],
+      json['command_line'],
+      json['started'],
+      json['host_count'],
+    )
+  }
+};
 
 @Injectable({
   providedIn: 'root'
@@ -38,10 +60,12 @@ export class ScansService {
   /**
    * Fetch a page of scan data.
    */
-  public async listScans(pageIndex: number, pageSize: number, sortColumn: string,
-    sortDirection: SortDirection): Promise<Record<string, any>> {
-    let result = await this.serverService.invoke('list_scans', [pageIndex, pageSize,
-      sortColumn, sortDirection == "asc"]);
-    return result;
+  public async listScans(page: PageRequest): Promise<PageResult<ScanListItem>> {
+    let json = await this.serverService.invoke('list_scans', [page.toJson()]);
+    let items = new Array<ScanListItem>();
+    for (let item of json['items']) {
+      items.push(ScanListItem.fromJson(item));
+    }
+    return new PageResult(json['total_count'], items);
   }
 }
