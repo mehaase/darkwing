@@ -14,54 +14,48 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import { BehaviorSubject } from 'rxjs';
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSpinner } from '@angular/material/progress-spinner';
-import { MatSort } from '@angular/material/sort';
-import { ScanService } from '../scan.service';
-import { ScanDataSource } from './table-datasource';
 import { PageRequest } from '../../page';
+import { HostListItem, HostService } from '../host.service';
 
 @Component({
-    selector: 'scan-table',
-    templateUrl: './table.component.html',
-    styleUrls: ['./table.component.scss']
+    selector: 'host-index',
+    templateUrl: './index.component.html',
+    styleUrls: ['./index.component.scss']
 })
-export class ScanTableComponent implements AfterViewInit {
-    displayedColumns: string[] = ['scanner', 'command_line', 'started', 'host_count'];
-    dataSource: ScanDataSource;
+export class HostIndexComponent implements AfterViewInit {
+    public hostCount!: number;
+    public hosts!: Array<HostListItem>;
+
+    private loadingSubject = new BehaviorSubject<boolean>(false);
+    public loading$ = this.loadingSubject.asObservable();
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
-    @ViewChild(MatSpinner) spinner!: MatSpinner;
-    @ViewChild(MatSort) sort!: MatSort;
 
-    /**
-     * Constructor
-     * @param scansService
-     */
-    constructor(scansService: ScanService) {
-        this.dataSource = new ScanDataSource(scansService);
-    }
-
-    public refresh() {
-        this.refreshData();
-    }
+    constructor(private hostService: HostService) { }
 
     ngAfterViewInit() {
         this.paginator.page
             .subscribe((_: any) => { this.refreshData() });
-        this.sort.sortChange
-            .subscribe((_: any) => { this.refreshData() });
         setTimeout(() => this.refreshData());
     }
 
-    private refreshData() {
+    private async refreshData() {
+        this.loadingSubject.next(true);
         let page = new PageRequest(
             this.paginator.pageIndex,
             this.paginator.pageSize,
-            this.sort.active,
-            this.sort.direction
+            'todo', //TODO
+            'asc'
         );
-        this.dataSource.loadScans(page);
+        try {
+            let result = await this.hostService.listHosts(page);
+            this.hostCount = result.totalCount;
+            this.hosts = result.items;
+        } finally {
+            this.loadingSubject.next(false);
+        }
     }
 }

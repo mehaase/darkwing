@@ -16,16 +16,18 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { HostsComponent } from './hosts/hosts.component';
+import { HostDetailComponent } from './host/detail/detail.component';
+import { HostIndexComponent } from './host/index/index.component';
 import { ScanDetailComponent } from './scan/detail/detail.component';
 import { ScanIndexComponent } from './scan/index/index.component';
 
 const routes: Routes = [
     { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
     { path: 'dashboard', component: DashboardComponent },
-    { path: 'hosts', component: HostsComponent },
-    { path: 'scan/:id', component: ScanDetailComponent },
+    { path: 'host', component: HostIndexComponent },
+    { path: 'host/:id', component: HostDetailComponent },
     { path: 'scan', component: ScanIndexComponent },
+    { path: 'scan/:id', component: ScanDetailComponent },
 ];
 
 @NgModule({

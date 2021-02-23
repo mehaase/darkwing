@@ -14,28 +14,28 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { ScanService } from '../scan.service';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-@Component({
-    selector: 'scan-detail',
-    templateUrl: './detail.component.html',
-    styleUrls: ['./detail.component.scss']
-})
-export class ScanDetailComponent implements OnInit {
-    public scan?: Record<string, any>;
+import { HostIndexComponent } from './index.component';
 
-    constructor(private route: ActivatedRoute, private scansService: ScanService) { }
+describe('IndexComponent', () => {
+    let component: HostIndexComponent;
+    let fixture: ComponentFixture<HostIndexComponent>;
 
-    ngOnInit(): void {
-        this.load();
-    }
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            declarations: [HostIndexComponent]
+        })
+            .compileComponents();
+    });
 
-    private async load() {
-        let id: string | null = this.route.snapshot.paramMap.get('id');
-        if (id) {
-            this.scan = await this.scansService.getScan(id);
-        }
-    }
-}
+    beforeEach(() => {
+        fixture = TestBed.createComponent(HostIndexComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
+
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
+});

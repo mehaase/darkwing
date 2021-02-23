@@ -30,45 +30,6 @@ from ..model.scan import HostScan
 from ..model.page import PageRequest, PageResult
 
 
-@aio_as_trio
-async def insert_host_scan(db: AsyncIOMotorClient, scan: HostScan) -> bson.ObjectId:
-    """
-    Insert a new scan document and new host documents.
-    """
-    host_docs: typing.List[dict] = list()
-    if scan.hosts:
-        # TODO batch inserts
-        for host in scan.hosts:
-            host_docs.append(
-                {
-                    "started": host.started,
-                    "completed": host.completed,
-                    "state": maybe(host.state).name.or_else(None),
-                    "state_reason": host.state_reason,
-                    "addresses": [str(a) for a in host.addresses],
-                    "hostnames": list(host.hostnames),
-                    "ports": [_port_to_dict(p) for p in host.ports],
-                }
-            )
-
-        result = await db.darkwing.host.insert_many(host_docs)
-        host_ids = result.inserted_ids
-    else:
-        host_ids = list()
-
-    scan_doc = {
-        "scanner": scan.scanner,
-        "scanner_version": scan.scanner_version,
-        "command_line": scan.command_line,
-        "started": scan.started,
-        "completed": scan.completed,
-        "hosts": host_ids,
-    }
-    result = await db.darkwing.scan.insert_one(scan_doc)
-    scan_id = result.inserted_id
-    return str(scan_id)
-
-
 @dataclass
 class ScanListItem:
     scan_id: str
@@ -93,34 +54,73 @@ class ScanListItem:
         )
 
 
-@aio_as_trio
-async def list_host_scans(db: AsyncIOMotorClient, page: PageRequest) -> PageResult:
-    """ List host scan documents. """
-    skip = page.page_number * page.items_per_page
-    sort_dir = pymongo.ASCENDING if page.sort_ascending else pymongo.DESCENDING
-    total = await db.darkwing.scan.count_documents({})
-    cursor = db.darkwing.scan.find(skip=skip, limit=page.items_per_page).sort(
-        [(page.sort_column, sort_dir)]
-    )
-    scans: typing.List[ScanListItem] = list()
-    async for doc in cursor:
-        scans.append(ScanListItem.from_db(doc))
-    return PageResult(total, scans)
+class ScanDb:
+    @staticmethod
+    @aio_as_trio
+    async def insert_scan(db: AsyncIOMotorClient, scan: HostScan) -> bson.ObjectId:
+        """
+        Insert a new scan document and new host documents.
+        """
+        host_docs: typing.List[dict] = list()
+        if scan.hosts:
+            # TODO batch inserts
+            for host in scan.hosts:
+                host_docs.append(
+                    {
+                        "started": host.started,
+                        "completed": host.completed,
+                        "state": maybe(host.state).name.or_else(None),
+                        "state_reason": host.state_reason,
+                        "addresses": [str(a) for a in host.addresses],
+                        "hostnames": list(host.hostnames),
+                        "ports": [_port_to_dict(p) for p in host.ports],
+                    }
+                )
 
+            result = await db.darkwing.host.insert_many(host_docs)
+            host_ids = result.inserted_ids
+        else:
+            host_ids = list()
 
-@aio_as_trio
-async def get_host_scan(db: AsyncIOMotorClient, id_: bson.ObjectId) -> dict:
-    """ Get a scan document. """
-    doc = await db.darkwing.scan.find_one({"_id": bson.ObjectId(id_)})
-    return {
-        "scan_id": str(doc["_id"]),
-        "scanner": doc["scanner"],
-        "scanner_version": doc["scanner_version"],
-        "command_line": doc["command_line"],
-        "started": maybe(doc["started"]).isoformat().or_else(None),
-        "completed": maybe(doc["completed"]).isoformat().or_else(None),
-        "host_count": len(doc["hosts"]),
-    }
+        scan_doc = {
+            "scanner": scan.scanner,
+            "scanner_version": scan.scanner_version,
+            "command_line": scan.command_line,
+            "started": scan.started,
+            "completed": scan.completed,
+            "hosts": host_ids,
+        }
+        result = await db.darkwing.scan.insert_one(scan_doc)
+        scan_id = result.inserted_id
+        return str(scan_id)
+
+    @aio_as_trio
+    async def list_scans(db: AsyncIOMotorClient, page: PageRequest) -> PageResult:
+        """ List scans. """
+        skip = page.page_number * page.items_per_page
+        sort_dir = pymongo.ASCENDING if page.sort_ascending else pymongo.DESCENDING
+        total = await db.darkwing.scan.count_documents({})
+        cursor = db.darkwing.scan.find(skip=skip, limit=page.items_per_page).sort(
+            [(page.sort_column, sort_dir)]
+        )
+        scans: typing.List[ScanListItem] = list()
+        async for doc in cursor:
+            scans.append(ScanListItem.from_db(doc))
+        return PageResult(total, scans)
+
+    @aio_as_trio
+    async def get_scan(db: AsyncIOMotorClient, id_: bson.ObjectId) -> dict:
+        """ Get scan details. """
+        doc = await db.darkwing.scan.find_one({"_id": bson.ObjectId(id_)})
+        return {
+            "scan_id": str(doc["_id"]),
+            "scanner": doc["scanner"],
+            "scanner_version": doc["scanner_version"],
+            "command_line": doc["command_line"],
+            "started": maybe(doc["started"]).isoformat().or_else(None),
+            "completed": maybe(doc["completed"]).isoformat().or_else(None),
+            "host_count": len(doc["hosts"]),
+        }
 
 
 def _port_to_dict(port: Port) -> dict:

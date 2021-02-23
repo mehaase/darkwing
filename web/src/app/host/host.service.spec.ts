@@ -14,28 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { ScanService } from '../scan.service';
+import { TestBed } from '@angular/core/testing';
 
-@Component({
-    selector: 'scan-detail',
-    templateUrl: './detail.component.html',
-    styleUrls: ['./detail.component.scss']
-})
-export class ScanDetailComponent implements OnInit {
-    public scan?: Record<string, any>;
+import { HostService } from './host.service';
 
-    constructor(private route: ActivatedRoute, private scansService: ScanService) { }
+describe('HostService', () => {
+    let service: HostService;
 
-    ngOnInit(): void {
-        this.load();
-    }
+    beforeEach(() => {
+        TestBed.configureTestingModule({});
+        service = TestBed.inject(HostService);
+    });
 
-    private async load() {
-        let id: string | null = this.route.snapshot.paramMap.get('id');
-        if (id) {
-            this.scan = await this.scansService.getScan(id);
-        }
-    }
-}
+    it('should be created', () => {
+        expect(service).toBeTruthy();
+    });
+});

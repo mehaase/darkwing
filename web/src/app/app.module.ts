@@ -22,6 +22,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { LayoutModule } from '@angular/cdk/layout';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
@@ -36,10 +37,11 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 
 import { AppComponent } from './app.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { HostsComponent } from './hosts/hosts.component';
+import { HostDetailComponent } from './host/detail/detail.component';
+import { HostIndexComponent } from './host/index/index.component';
 import { MainNavComponent } from './main-nav/main-nav.component';
-import { ScanIndexComponent } from './scan/index/index.component';
 import { ScanDetailComponent } from './scan/detail/detail.component';
+import { ScanIndexComponent } from './scan/index/index.component';
 import { ScanTableComponent } from './scan/table/table.component';
 import { UploadZoneComponent } from './upload-zone/upload-zone.component';
 
@@ -47,7 +49,8 @@ import { UploadZoneComponent } from './upload-zone/upload-zone.component';
     declarations: [
         AppComponent,
         DashboardComponent,
-        HostsComponent,
+        HostDetailComponent,
+        HostIndexComponent,
         MainNavComponent,
         ScanIndexComponent,
         ScanDetailComponent,
@@ -62,6 +65,7 @@ import { UploadZoneComponent } from './upload-zone/upload-zone.component';
         LayoutModule,
         MatButtonModule,
         MatCardModule,
+        MatChipsModule,
         MatGridListModule,
         MatIconModule,
         MatListModule,

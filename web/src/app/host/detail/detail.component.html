@@ -1,0 +1,36 @@
+<div class='content'>
+  <div class='spinner-container' *ngIf='loading$ | async'>
+    <mat-spinner diameter='50'></mat-spinner>
+  </div>
+
+  <div *ngIf='host != null'>
+    <img class='cover' src='/assets/host-default.png' alt='Host has no screenshot'>
+    <p>
+      <strong>State:</strong> {{host.state}} ({{host.stateReason}})
+    </p>
+    <p>
+      <strong>Started:</strong> {{host.started}}
+      <strong>Completed: </strong> {{host.completed}}
+    </p>
+    <p>
+      <strong>Addresses</strong>
+    </p>
+    <ul>
+      <li *ngFor='let address of host.addresses'>{{address}}</li>
+    </ul>
+    <p>
+      <strong>Hostnames</strong>
+    </p>
+    <ul>
+      <li *ngFor='let hostname of host.hostnames'>{{hostname}}</li>
+    </ul>
+    <p>
+      <strong>Ports</strong>
+    </p>
+    <ul>
+      <li *ngFor='let port of host.ports'>
+        {{port.transport}}/{{port.number}} ({{port.state}} - {{port.stateReason}})
+      </li>
+    </ul>
+  </div>
+</div>

@@ -16,7 +16,7 @@
 
 import { CollectionViewer, DataSource } from '@angular/cdk/collections';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { ScanListItem, ScansService } from 'src/app/scans.service';
+import { ScanListItem, ScanService } from '../scan.service';
 import { PageRequest } from '../../page';
 
 /**
@@ -35,7 +35,7 @@ export class ScanDataSource extends DataSource<ScanListItem> {
      * Constructor
      * @param scansService
      */
-    constructor(private scansService: ScansService) {
+    constructor(private scansService: ScanService) {
         super();
     }
 

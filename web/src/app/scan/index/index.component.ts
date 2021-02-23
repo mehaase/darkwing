@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import { Component, ViewChild } from '@angular/core';
-import { ScansService } from '../../scans.service';
+import { ScanService } from '../scan.service';
 import { ScanTableComponent } from '../table/table.component';
 
 /**
@@ -33,7 +33,7 @@ export class ScanIndexComponent {
      *
      * @param service
      */
-    constructor(private service: ScansService) { }
+    constructor(private service: ScanService) { }
 
     /**
      * Upload scans to the server.

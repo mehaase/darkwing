@@ -13,22 +13,24 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HostsComponent } from './hosts.component';
 
-describe('HostsComponent', () => {
-    let component: HostsComponent;
-    let fixture: ComponentFixture<HostsComponent>;
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { HostDetailComponent } from './detail.component';
+
+describe('DetailComponent', () => {
+    let component: HostDetailComponent;
+    let fixture: ComponentFixture<HostDetailComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [HostsComponent]
+            declarations: [HostDetailComponent]
         })
             .compileComponents();
     });
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(HostsComponent);
+        fixture = TestBed.createComponent(HostDetailComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

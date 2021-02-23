@@ -27,7 +27,7 @@ from pymaybe import maybe
 import trio
 
 from . import dispatch
-from ..database.scan import get_host_scan, insert_host_scan, list_host_scans
+from ..database.scan import ScanDb
 from ..model.page import PageRequest, PageResult
 from ..nmap.loader import load_scan
 
@@ -39,7 +39,7 @@ logger = logging.getLogger(__name__)
 async def upload_scan(base64_data: str) -> dict:
     data = b64decode(base64_data.encode("utf8"))
     scan = await trio.to_thread.run_sync(load_scan, data)
-    scan_id = await insert_host_scan(dispatch.ctx.db, scan)
+    scan_id = await ScanDb.insert_scan(dispatch.ctx.db, scan)
     return {"scan_id": scan_id}
 
 
@@ -56,10 +56,10 @@ async def list_scans(page: dict) -> dict:
             "host_count": scan.host_count,
         }
 
-    result = await list_host_scans(dispatch.ctx.db, PageRequest.from_json(page))
+    result = await ScanDb.list_scans(dispatch.ctx.db, PageRequest.from_json(page))
     return result.serialize(jsonify_scan)
 
 
 @dispatch.handler
 async def get_scan(scan_id: str) -> dict:
-    return await get_host_scan(dispatch.ctx.db, scan_id)
+    return await ScanDb.get_scan(dispatch.ctx.db, scan_id)

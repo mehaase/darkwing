@@ -28,56 +28,64 @@ import trio
 from trio_asyncio import aio_as_trio
 
 from . import dispatch
+from ..database.host import HostDb
+from ..model.page import PageRequest
 
 
 logger = logging.getLogger(__name__)
 
 
 @dispatch.handler
-async def list_hosts() -> dict:
-    return {"hosts": await _db_list_hosts(dispatch.ctx.db)}
+async def list_hosts(page: dict) -> dict:
+    def jsonify_host_item(host):
+        return {
+            "host_id": host.host_id,
+            "started": maybe(host.started).isoformat().or_else(None),
+            "completed": maybe(host.completed).isoformat().or_else(None),
+            "state": host.state,
+            "state_reason": host.state_reason,
+            "addresses": [str(addr) for addr in host.addresses],
+            "hostnames": host.hostnames,
+            "cover_image": None,
+        }
 
-
-@aio_as_trio
-async def _db_list_hosts(db: AsyncIOMotorClient) -> list:
-    """ List host scan documents. """
-    # TODO projection/aggregation to count ports?
-    cursor = db.darkwing.host.find()
-    host_docs: typing.List[dict] = list()
-    async for doc in cursor:
-        host_docs.append(
-            {
-                "host_id": str(doc["_id"]),
-                "started": maybe(doc["started"]).isoformat().or_else(None),
-                "completed": maybe(doc["completed"]).isoformat().or_else(None),
-                "state": doc["state"],
-                "state_reason": doc["state_reason"],
-                "addresses": doc["addresses"],
-                "hostnames": [h["name"] for h in doc["hostnames"]],
-                "port_count": len(doc["ports"]),
-            }
-        )
-    return host_docs
+    result = await HostDb.list_hosts(dispatch.ctx.db, PageRequest.from_json(page))
+    return result.serialize(jsonify_host_item)
 
 
 @dispatch.handler
 async def get_host(host_id: str) -> dict:
-    return await _db_get_host(dispatch.ctx.db, host_id)
+    def jsonify_host(host):
+        return {
+            "host_id": host.host_id,
+            "started": maybe(host.started).isoformat().or_else(None),
+            "completed": maybe(host.completed).isoformat().or_else(None),
+            "state": host.state,
+            "state_reason": host.state_reason,
+            "addresses": [str(addr) for addr in host.addresses],
+            "hostnames": host.hostnames,
+            "cover_image": None,
+            "ports": [jsonify_port(p) for p in host.ports],
+        }
 
+    def jsonify_port(port):
+        return {
+            "number": port.number,
+            "transport": port.transport.name,
+            "state": port.state.name,
+            "state_reason": port.state_reason,
+            "service": jsonify_service(port.service),
+        }
 
-@aio_as_trio
-async def _db_get_host(
-    db: AsyncIOMotorClient, host_id: str
-) -> typing.Dict[str, typing.Any]:
-    """ List host scan documents. """
-    doc = await db.darkwing.host.find_one({"_id": bson.ObjectId(host_id)})
-    return {
-        "host_id": str(doc["_id"]),
-        "started": maybe(doc["started"]).isoformat().or_else(None),
-        "completed": maybe(doc["completed"]).isoformat().or_else(None),
-        "state": doc["state"],
-        "state_reason": doc["state_reason"],
-        "addresses": doc["addresses"],
-        "hostnames": [{"name": h["name"], "type": h["type"]} for h in doc["hostnames"]],
-        "port_count": len(doc["ports"]),
-    }
+    def jsonify_service(service):
+        return {
+            "name": service.name,
+            "product": service.product,
+            "version": service.version,
+            "method": service.method,
+            "confidence": service.confidence,
+            "cpes": service.cpes,
+        }
+
+    host = await HostDb.get_host(dispatch.ctx.db, host_id)
+    return jsonify_host(host)

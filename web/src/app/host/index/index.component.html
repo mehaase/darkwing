@@ -1,0 +1,33 @@
+<div class='spinner-container' *ngIf='loading$ | async'>
+  <mat-spinner diameter='50'></mat-spinner>
+</div>
+
+<div class='content'>
+  <div class='card-container'>
+    <mat-card class='host-card' *ngFor='let host of hosts'>
+      <mat-card-header>
+        <mat-card-title>{{host.hostnames[0]}}</mat-card-title>
+        <mat-card-subtitle>{{host.addresses[0]}}</mat-card-subtitle>
+      </mat-card-header>
+      <img mat-card-image src='/assets/host-default.png' alt='Host has no screenshot'>
+      <mat-card-content>
+        <p>
+          Your host notes go here…
+        </p>
+        <mat-chip-list aria-label='Tags'>
+          <mat-chip color='primary' selected>Triage</mat-chip>
+          <mat-chip color='accent' selected>My Tag</mat-chip>
+        </mat-chip-list>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button [routerLink]='"/host/" + host.hostId'>VIEW</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>
+
+<mat-paginator
+  class='footer'
+  [length]='hostCount'
+  [pageSizeOptions]='[10, 25, 100]'
+  showFirstLastButtons></mat-paginator>

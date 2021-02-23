@@ -13,23 +13,20 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
-import { Component, OnInit } from '@angular/core';
 
-/**
- * Display data about hosts.
- *
- * THIS IS CURRENTLY EMPTY.
- */
-@Component({
-    selector: 'app-hosts',
-    templateUrl: './hosts.component.html',
-    styleUrls: ['./hosts.component.scss']
-})
-export class HostsComponent implements OnInit {
+import { TestBed } from '@angular/core/testing';
 
-    constructor() { }
+import { ScanService } from './scan.service';
 
-    ngOnInit(): void {
-    }
+describe('ScansService', () => {
+    let service: ScanService;
 
-}
+    beforeEach(() => {
+        TestBed.configureTestingModule({});
+        service = TestBed.inject(ScanService);
+    });
+
+    it('should be created', () => {
+        expect(service).toBeTruthy();
+    });
+});

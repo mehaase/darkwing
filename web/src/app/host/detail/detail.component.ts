@@ -14,28 +14,37 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import { Component, OnInit } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { AfterViewInit, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ScanService } from '../scan.service';
+import { Host, HostService } from '../host.service';
 
 @Component({
-    selector: 'scan-detail',
+    selector: 'host-detail',
     templateUrl: './detail.component.html',
     styleUrls: ['./detail.component.scss']
 })
-export class ScanDetailComponent implements OnInit {
-    public scan?: Record<string, any>;
+export class HostDetailComponent implements AfterViewInit {
+    public host?: Host;
 
-    constructor(private route: ActivatedRoute, private scansService: ScanService) { }
+    private loadingSubject = new BehaviorSubject<boolean>(false);
+    public loading$ = this.loadingSubject.asObservable();
 
-    ngOnInit(): void {
-        this.load();
+    constructor(private hostService: HostService, private route: ActivatedRoute) { }
+
+    ngAfterViewInit() {
+        setTimeout(() => this.refreshData());
     }
 
-    private async load() {
-        let id: string | null = this.route.snapshot.paramMap.get('id');
-        if (id) {
-            this.scan = await this.scansService.getScan(id);
+    private async refreshData() {
+        let hostId: string | null = this.route.snapshot.paramMap.get('id');
+        this.loadingSubject.next(true);
+        try {
+            if (hostId != null) {
+                this.host = await this.hostService.getHost(hostId);
+            }
+        } finally {
+            this.loadingSubject.next(false);
         }
     }
 }
