@@ -4,7 +4,7 @@
 *.log
 *.pk
 .coverage
-.darkwing-env
+.darkwing.env
 .mypy_cache
 .pytest_cache
 .vscode
