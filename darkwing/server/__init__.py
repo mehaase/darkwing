@@ -17,20 +17,16 @@
 from __future__ import annotations
 from copy import copy
 from dataclasses import dataclass
-from functools import wraps
 import logging
-import ipaddress
 import typing
 
 # from itsdangerous import BadSignature
 import trio
 from trio_jsonrpc import (
     Dispatch,
-    JsonRpcApplicationError,
     JsonRpcConnection,
     JsonRpcConnectionType,
     JsonRpcException,
-    JsonRpcInternalError,
 )
 from trio_jsonrpc.transport.ws import WebSocketTransport
 import trio_websocket

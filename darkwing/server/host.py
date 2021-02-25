@@ -14,18 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from base64 import b64decode
-from datetime import datetime
-from ipaddress import IPv4Address, IPv6Address
 import logging
-import typing
 
-import bson
-from lxml import etree
-from motor.motor_asyncio import AsyncIOMotorClient
 from pymaybe import maybe
-import trio
-from trio_asyncio import aio_as_trio
 
 from . import dispatch
 from ..database.host import HostDb

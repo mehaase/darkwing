@@ -24,7 +24,6 @@ import typing
 
 import bson
 from motor.motor_asyncio import AsyncIOMotorClient
-from pymaybe import maybe
 import pymongo
 
 from ..model.page import PageRequest, PageResult

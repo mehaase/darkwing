@@ -15,7 +15,6 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from __future__ import annotations
-from dataclasses import dataclass
 import logging
 import os
 import signal
@@ -24,7 +23,7 @@ import typing
 import trio
 import trio_asyncio
 
-from . import AppConfig, project_path
+from . import AppConfig
 from .database import connect_db
 
 from .server import DispatchContext, run_server

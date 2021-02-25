@@ -12,7 +12,8 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.import { LayoutModule } from '@angular/cdk/layout';
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatButtonModule } from '@angular/material/button';
