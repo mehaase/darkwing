@@ -1,5 +1,8 @@
 # Darkwing: Let's get IP-rangerous!
 
+[![Build Status](https://img.shields.io/travis/com/mehaase/darkwing)](https://travis-ci.com/github/mehaase/darkwing)
+[![Coverage](https://img.shields.io/codecov/c/github/mehaase/darkwing)](https://app.codecov.io/gh/mehaase/darkwing)
+
 ## Overview
 
 Darkwing is your pen test sidekick.
